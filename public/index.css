@@ -1,0 +1,44 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.main-container {
+  height: 100vh;
+  width: 100%;
+  margin: 0 auto;
+  background-color: rgb(111, 111, 211);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 400px;
+}
+
+.form__label {
+  display: block;
+}
+
+.form__input {
+  display: block;
+  width: 100%;
+}
+
+.form__profile-pic-cont {
+  background-color: rgb(175 184 247);
+  height: 270px;
+  width: 400px;
+}
+
+.form__profile-pic {
+  width: 400px;
+  height: 200px;
+}

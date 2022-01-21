@@ -1,0 +1,39 @@
+{
+  "name": "lost-pets-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "sync": "ts-node ./server/sync.ts",
+
+    "dev:be": "nodemon --watch ./server/index.ts --exec ts-node ./server/index.ts",
+    "dev": "yarn dev:fe && yarn dev:be",
+    "build:be": "tsc",
+    
+    "dev:fe": "parcel serve ./public/index.html",
+    "build:front": "parcel build ./public/index.html",
+
+    "build": "npm run build:be && npm run build:front",
+    "start": "node ./server-dist/index.js"
+  },
+  "dependencies": {
+    "algoliasearch": "^4.12.0",
+    "cloudinary": "^1.28.1",
+    "express": "^4.17.2",
+    "jsonwebtoken": "^8.5.1",
+    "nodemon": "^2.0.15",
+    "pg": "^8.7.1",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.12.5",
+    "parcel": "^2.0.0-rc.0",
+    "typescript": "^4.5.2",
+    "@vaadin/router": "^1.7.4",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "dropzone": "^5.9.3"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.8",
+    "@parcel/transformer-image": "2.0.0-rc.0"
+  }
+}
