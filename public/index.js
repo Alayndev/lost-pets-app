@@ -1,4 +1,6 @@
 const API_URL = "http://localhost:3000";
+// const API_URL = "https://lost-pet-finder-app.herokuapp.com/";
+
 
 function userExist(email) {
   console.log("userExist state: " + email);

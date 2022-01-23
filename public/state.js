@@ -1,6 +1,6 @@
 // const API_URL =
 //   process.env.NODE_ENV === "production"
-//     ? "https://dwf-m6-r-p-s-v2.herokuapp.com"
+//     ? "https://lost-pet-finder-app.herokuapp.com/"
 //     : "http://localhost:3000";
 
 const API_URL = "http://localhost:3000";
