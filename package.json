@@ -6,14 +6,12 @@
   "scripts": {
     "sync": "ts-node ./server/sync.ts",
 
-    "dev:be": "nodemon --watch ./server/index.ts --exec ts-node ./server/index.ts",
-    "dev": "yarn dev:fe && yarn dev:be",
-    "build:be": "tsc",
+    "dev:api": "nodemon --watch ./server/index.ts --exec ts-node ./server/index.ts",
+    "dev:front": "live-server ./public",
     
-    "dev:fe": "parcel serve ./public/index.html",
-    "build:front": "parcel build ./public/index.html",
+    "build:api": "tsc",
+    "build": "npm run build:api",
 
-    "build": "npm run build:be && npm run build:front",
     "start": "node ./server-dist/index.js"
   },
   "dependencies": {

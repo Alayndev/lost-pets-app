@@ -1,6 +1,4 @@
-// Toda la lógica de AUTH: 1) Guardar en table User y Auth lo correspondiente - 2) Generar token
-
-import { User, Auth } from "../models"; // Controller invocan a capa Model
+import { User, Auth } from "../models";
 
 import * as jwt from "jsonwebtoken";
 
@@ -10,39 +8,41 @@ function sha256(text: string) {
   return crypto.createHash("sha256").update(text).digest("hex");
 }
 
-const SECRET_TEXT = "asdfghjklñpoiuytre";
+const SECRET_TEXT = "asdfghjklñpoiuytre"; // ENV VAR
 
 export async function signUp(userData) {
   const {
-    full_name,
-    birthdate,
+    fullName,
     email,
     password,
-  }: { full_name: string; birthdate: string; email: string; password: string } =
-    userData;
+  }: { fullName: string; email: string; password: string } = userData;
 
   if (userData) {
     // TABLE USERS:
     const [user, userCreated] = await User.findOrCreate({
-      where: { email: email },
+      where: { email: email }, // Si este mail ya existe, userCreated va a ser false y vamos a endpoint auth/token para chequear la contraseña hasheandola y crear/chequear token
 
       defaults: {
-        full_name,
-        birthdate,
+        fullName,
         email,
+        state: true,
       },
     });
 
-    // TABLE AUTH:
-    const [auth, authCreated] = await Auth.findOrCreate({
-      where: { userId: user.get("id") },
+    // Para SOLO hacer otra llamada a la DB solo de ser necesario
+    if (userCreated) {
+      // TABLE AUTH:
+      const [auth, authCreated] = await Auth.findOrCreate({
+        where: { userId: user.get("id") },
 
-      defaults: {
-        email: email,
-        password: sha256(password),
-        userId: user.get("id"),
-      },
-    });
+        defaults: {
+          email: email,
+          password: sha256(password),
+          userId: user.get("id"),
+        },
+      });
+      return { user, userCreated, auth, authCreated };
+    }
 
     return { user, userCreated };
   } else {
@@ -51,11 +51,10 @@ export async function signUp(userData) {
 }
 
 export async function createToken(userData) {
-  const { email, password }: { email: string; password: string } = userData;
+  const { password }: { email: string; password: string } = userData;
 
   const userFound = await Auth.findOne({
     where: {
-      email,
       password: sha256(password),
     },
   });
@@ -67,4 +66,10 @@ export async function createToken(userData) {
 
     return { token };
   }
+}
+
+export async function userExist(email: string) {
+  const userFound = await User.findOne({ where: { email } });
+
+  return userFound ? true : false;
 }

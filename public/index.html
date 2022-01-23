@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Lost Pets App</title>
     <link rel="stylesheet" href="./index.css" />
     <script defer src="./index.js" type="module"></script>
     <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
@@ -15,28 +15,19 @@
     />
   </head>
   <body>
-    <div class="main-container">
-      <form id="form">
-        <label class="form__label">
-          Nombre:
-          <input type="text" name="fullname" class="form__input" />
-        </label>
+    <div id="root">
+      <div class="signin">
+        <h2>Ingresar</h2>
 
-        <label class="form__label">
-          Bio:
-          <textarea name="bio" class="form__input form__textarea"></textarea>
-        </label>
+        <form class="form">
+          <div>Email:</div>
+          <input name="email" type="text" />
+        </form>
 
-        <span class="form__profile-pic-title">Arratrá tu foto aquí:</span>
+        <button class="next-page">Siguiente</button>
+      </div>
 
-        <div class="form__profile-pic-cont">
-          <img class="form__profile-pic" />
-        </div>
-
-        <div class="form__button-cont">
-          <button class="form__save-button">Guardar</button>
-        </div>
-      </form>
+      <div class="user-data"></div>
     </div>
   </body>
 </html>

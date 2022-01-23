@@ -2,9 +2,9 @@ import { Model, DataTypes } from "sequelize";
 
 import { sequelize } from "./connection";
 
-class User extends Model {}
+class Report extends Model {}
 
-User.init(
+Report.init(
   {
     fullName: {
       type: DataTypes.STRING,
@@ -16,14 +16,23 @@ User.init(
       allowNull: false,
     },
 
-    state: {
-      type: DataTypes.BOOLEAN,
+    lat: {
+      type: DataTypes.STRING,
+    },
+
+    lng: {
+      type: DataTypes.STRING,
+    },
+
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
   },
   {
     sequelize,
-    modelName: "user",
+    modelName: "report",
   }
 );
 
-export { User };
+export { Report };

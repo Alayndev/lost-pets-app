@@ -1,4 +1,4 @@
-import { User, Product, Auth } from "../models"; // Controller invocan a capa Model
+import { User, Pet, Auth } from "../models"; // Controller invocan a capa Model
 
 import { cloudinary } from "../lib/cloudinary";
 
@@ -60,8 +60,8 @@ export async function getUserProfile(userId) {
 
 // Teoria 34 - La idea es que estas funciones Controllers funcionen independientemente de que sean llamadas por View/endpoints (NO debe importar si son llamadas por express o por X) o mismo desde otras funciones Controllers
 // Aquí sucede la comunicación con la/s DB/s haciendo uso de las llamadas async de los Models sequelize/capa Model del patrón de arquitectura MVC
-export async function createProduct(userId: number, productData) {
-  const { title, price } = productData;
+export async function createPet(userId: number, PetData) {
+  const { title, price } = PetData;
 
   if (!userId) {
     throw "Parameter userId does not exist";
@@ -69,8 +69,8 @@ export async function createProduct(userId: number, productData) {
 
   if (userId) {
     try {
-      const [product, productCreated] = await Product.findOrCreate({
-        // To make sure that the user do not post more than one product with the same data
+      const [pet, petCreated] = await Pet.findOrCreate({
+        // To make sure that the user do not post more than one Pet with the same data
         where: {
           title,
           price,
@@ -78,12 +78,12 @@ export async function createProduct(userId: number, productData) {
         },
 
         defaults: {
-          ...productData,
+          ...PetData,
           userId: userId,
         },
       });
 
-      return { productCreated, product };
+      return { petCreated, pet };
     } catch (err) {
       return err;
     }

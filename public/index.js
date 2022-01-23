@@ -1,60 +1,65 @@
-async function pullProfile() {
-  const formEl = document.querySelector("#form");
-  const imgEl = document.querySelector(".form__profile-pic");
-  console.log(imgEl);
+const API_URL = "http://localhost:3000";
 
-  const res = await fetch("/profile?userId=3"); // Obviamente una query dinámica, GUARDAR TOKEN EN localStorage
+function userExist(email) {
+  console.log("userExist state: " + email);
 
-  const userProfile = await res.json();
-  console.log(userProfile);
-
-  if (userProfile) {
-    formEl.fullname.value = userProfile.fullName;
-
-    formEl.bio.value = userProfile.bio;
-
-    imgEl.src = userProfile.pictureURL;
-  }
+  return fetch(API_URL + "/users/exist?email=" + email)
+    .then((res) => res.json())
+    .then((json) => {
+      console.log(json);
+      return json;
+    });
 }
 
 function main() {
-  pullProfile();
-
-  const formEl = document.querySelector("#form");
-
-  let pictureURL;
-
-  const myDropzone = new Dropzone(".form__profile-pic-cont", {
-    url: "/falsa",
-    autoProcessQueue: false, 
-  });
-
-  console.log(myDropzone);
-
-  myDropzone.on("thumbnail", function (file) {
-    pictureURL = file.dataURL;
-    console.log(file.dataURL);
-  });
-
-  formEl.addEventListener("submit", (e) => {
+  const formEl = document.querySelector(".form");
+  formEl.addEventListener("submit", async (e) => {
     e.preventDefault();
+    const target = e.target;
+    const email = target.email.value;
+    const newUserPromise = userExist(email);
+    console.log(newUserPromise, "Hola");
 
-    const fullName = e.target.fullname.value;
+    const res = await newUserPromise;
 
-    const bio = e.target.bio.value;
-    console.log({ fullName, bio, pictureURL });
+    if (!res.exist) {
+      console.log("NO existe, POST /auth");
+      const divEl = document.querySelector(".user-data");
+      divEl.innerHTML = `
+      <div class="user-data">
+        <h2>Mis datos</h2>
+        
+        <form class="form">
+          <div> Nombre: </div>
+          <input name="email" type="text" />
+          
+          <div> Contraseña: </div>
+          <input name="password" type="text" />
 
-    fetch("/profile", {
-      headers: { "content-type": "application/json" },
-      method: "POST",
-      body: JSON.stringify({
-        fullName,
-        bio,
-        pictureURL, 
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => console.log(data));
+          <div> Repetir contraseña: </div>
+          <input name="passwordtwo" type="text" />
+        </form>
+        
+        <button class="next-page">Siguiente</button>
+      </div>`;
+    } else {
+      console.log(
+        "YA EXISTE, user ingresa contraseña y la haseamos para compararla con la guardada en la DB, POST /auth/token"
+      );
+      const divEl = document.querySelector(".user-data");
+      divEl.innerHTML = `    <div class="signin">
+      <h2>Ingresar</h2>
+
+        <form class="form">
+          <div> Contraseña: </div>
+          <input name="password" type="text" />
+
+        </form>
+
+        <button class="next-page">Guardar</button>
+      </div>
+`;
+    }
   });
 }
 

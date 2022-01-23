@@ -2,28 +2,42 @@ import { Model, DataTypes } from "sequelize";
 
 import { sequelize } from "./connection";
 
-class User extends Model {}
+class Pet extends Model {}
 
-User.init(
+Pet.init(
   {
     fullName: {
       type: DataTypes.STRING,
       allowNull: false,
     },
 
-    email: {
+    lat: {
       type: DataTypes.STRING,
       allowNull: false,
     },
 
+    lng: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+
+    description: {
+      type: DataTypes.STRING,
+    },
+
     state: {
       type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
+
+    pictureURL: {
+      type: DataTypes.STRING,
     },
   },
   {
     sequelize,
-    modelName: "user",
+    modelName: "pet",
   }
 );
 
-export { User };
+export { Pet };
