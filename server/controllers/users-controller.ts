@@ -2,6 +2,49 @@ import { User, Pet, Auth } from "../models"; // Controller invocan a capa Model
 
 import { cloudinary } from "../lib/cloudinary";
 
+export async function userRegistered(email: string) {
+  const userFound = await User.findOne({ where: { email } });
+
+  return { exist: userFound ? true : false, userFound };
+}
+
+export async function userSignUp(userData) {
+  const { fullName, email }: { fullName: string; email: string } = userData;
+
+  if (userData) {
+    // TABLE USERS:
+    const [user, userCreated] = await User.findOrCreate({
+      where: { email: email },
+
+      defaults: {
+        fullName,
+        email,
+        state: true,
+      },
+    });
+
+    return { user, userCreated };
+  } else {
+    throw "Controller without userData";
+  }
+}
+
+export async function getUserProfile(userId) {
+  if (!userId) {
+    throw new Error(
+      " No hay userId en users-controller.ts - getUserProfile() "
+    );
+  }
+
+  try {
+    const userProfile = await User.findByPk(userId);
+
+    return userProfile;
+  } catch (err) {
+    console.error({ err });
+  }
+}
+
 export async function createUser(userId, userData) {
   const { fullName, bio, pictureURL } = userData;
 
@@ -38,23 +81,6 @@ export async function createUser(userId, userData) {
     }
   } else {
     console.error("No hay pictureURL en users-controller.ts - createUser()");
-  }
-}
-
-// 1hr. 10m.
-export async function getUserProfile(userId) {
-  if (!userId) {
-    throw new Error(
-      " No hay userId en users-controller.ts - getUserProfile() "
-    );
-  }
-
-  try {
-    const userProfile = await User.findByPk(userId);
-
-    return userProfile;
-  } catch (err) {
-    console.error({ err });
   }
 }
 

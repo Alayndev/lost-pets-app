@@ -5,16 +5,17 @@ import * as path from "path";
 
 // Controllers
 import {
-  createUser,
+  userRegistered,
+  userSignUp,
   getUserProfile,
+  createUser,
   createPet,
 } from "./controllers/users-controller";
-import { signUp, userRegistered } from "./controllers/auth-controller";
-import { createToken } from "./controllers/auth-controller";
-import { getUserPets } from "./controllers/products-controller";
+import { authSignUp, createToken } from "./controllers/auth-controller";
+import { getUserPets } from "./controllers/pets-controller";
 
 // Middlewares
-import { authMiddleware, hashPassword } from "./middlewares";
+import { authMiddleware, hashPassword } from "./middlewares"; // CREAR MIDDLEWARES PARA DIF. CHEQUEOS DE BODY (emailAndPasswordBodyCheck - emailBodyCheck - etc.) 
 
 // EXPRESS CONFIG
 const app = express();
@@ -42,7 +43,7 @@ app.get("/users/registered", async (req, res) => {
   try {
     const exist = await userRegistered(email);
 
-    res.send({ email, exist });
+    res.send({ exist });
   } catch (err) {
     res.send({ err });
   }
@@ -59,7 +60,14 @@ app.post("/auth", hashPassword, async (req, res) => {
   }
 
   try {
-    const { user, userCreated } = await signUp(req.body, req._hashPassword);
+    const { user, userCreated } = await userSignUp(req.body);
+
+    // Para SOLO hacer otra llamada a la DB de ser necesario
+    if (userCreated) {
+      const { auth, authCreated } = await authSignUp(user, req._hashPassword);
+
+      res.status(201).json({ user, userCreated, auth, authCreated });
+    }
 
     res.status(201).json({ user, userCreated });
   } catch (err) {
@@ -78,13 +86,44 @@ app.post("/auth/token", hashPassword, async (req, res) => {
   }
 
   try {
-    const token = await createToken(email, req._hashPassword); 
+    const token = await createToken(email, req._hashPassword);
+
+    if (token.error) {
+      res.status(400).json({ error: token.error });
+    }
 
     res.status(200).json({ token });
   } catch (err) {
     res.status(400).json({ err });
   }
 });
+
+app.get("/users/profile", authMiddleware, async (req, res) => {
+  const { id } = req._user;
+
+  if (!id) {
+    res.status(400).json({
+      message: "This enpoint needs: id",
+    });
+  }
+
+  try {
+    const userProfile = await getUserProfile(id);
+
+    res.status(200).json(userProfile);
+  } catch (err) {
+    res.status(400).json({ err });
+  }
+});
+
+// BUSCAR ENDPOINT TEORIA PARA ACTUALIZAR HACIENDO UN SOLO LLAMADO A LA DB
+app.patch("/users/profile", authMiddleware, async (req, res) => {});
+
+app.get("/users/pets", authMiddleware, async (req, res) => {});
+
+
+
+// --------------------------------- ENDPOINTS DE AYUDA: --------------------//
 
 // POST /products: Crear un endpoint POST /products, que permita crear productos y estos estén vinculados al User que el token indica. O sea que este endpoint solo debe recibir la data del nuevo producto y nada relacionado al User a relacionar, esto debe ser extraido del token cómo ya vimos en el proceso de auth.
 app.post("/products", authMiddleware, async (req, res) => {
@@ -152,27 +191,8 @@ app.post("/profile", async (req, res) => {
   }
 });
 
-app.get("/profile", async (req, res) => {
-  const { userId } = req.query;
-  console.log({ userId });
-
-  if (!userId) {
-    res.status(400).json({
-      message: "This enpoint needs: userId",
-    });
-  }
-
-  try {
-    const userProfile = await getUserProfile(userId);
-
-    res.status(200).json(userProfile);
-  } catch (err) {
-    res.status(400).json({ err });
-  }
-});
-
-//////////////////// Servir el Front: MOVER CONST
-const staticDirPath = path.resolve(__dirname, "../public"); // CAMBIAR A CARPETA QUE ESCUPE PARCEL (public-dist/dist)
+//---------------------------------- Servir el Front: ----------------------------------//
+const staticDirPath = path.resolve(__dirname, "../public"); // MOVER CONST Y CAMBIAR A CARPETA QUE ESCUPE PARCEL (public-dist/dist)
 
 app.use(express.static(staticDirPath));
 
