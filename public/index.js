@@ -1,11 +1,10 @@
 //const API_URL = "http://localhost:3000";
 const API_URL = "https://lost-pet-finder-app.herokuapp.com";
 
+function userRegistered(email) {
+  console.log("userRegistered state: " + email);
 
-function userExist(email) {
-  console.log("userExist state: " + email);
-
-  return fetch(API_URL + "/users/exist?email=" + email)
+  return fetch(API_URL + "/users/registered?email=" + email)
     .then((res) => res.json())
     .then((json) => {
       console.log(json);
@@ -19,13 +18,13 @@ function main() {
     e.preventDefault();
     const target = e.target;
     const email = target.email.value;
-    const newUserPromise = userExist(email);
+    const newUserPromise = userRegistered(email);
     console.log(newUserPromise, "Hola");
 
     const res = await newUserPromise;
 
     if (!res.exist) {
-      console.log("NO existe, POST /auth");
+      console.log("NO resgistrado, POST /auth");
       const divEl = document.querySelector(".user-data");
       divEl.innerHTML = `
       <div class="user-data">
@@ -46,7 +45,7 @@ function main() {
       </div>`;
     } else {
       console.log(
-        "YA EXISTE, user ingresa contraseña y la haseamos para compararla con la guardada en la DB, POST /auth/token"
+        "YA REGISTRADO, user ingresa contraseña y la haseamos para compararla con la guardada en la DB, POST /auth/token"
       );
       const divEl = document.querySelector(".user-data");
       divEl.innerHTML = `    <div class="signin">

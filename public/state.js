@@ -1,6 +1,6 @@
 // const API_URL =
 //   process.env.NODE_ENV === "production"
-//     ? "https://lost-pet-finder-app.herokuapp.com/"
+//     ? "https://lost-pet-finder-app.herokuapp.com"
 //     : "http://localhost:3000";
 
 const API_URL = "http://localhost:3000";
@@ -45,10 +45,10 @@ const state = {
     this.listeners.push(cb);
   },
 
-  userExist(email) {
-    console.log("userExist state: " + email);
+  userRegistered(email) {
+    console.log("userRegistered state: " + email);
 
-    return fetch(API_URL + "/users/exist?email=" + email)
+    return fetch(API_URL + "/users/registered?email=" + email)
       .then((res) => res.json())
       .then((json) => console.log(json));
   },

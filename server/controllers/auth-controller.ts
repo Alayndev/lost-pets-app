@@ -2,20 +2,10 @@ import { User, Auth } from "../models";
 
 import * as jwt from "jsonwebtoken";
 
-import * as crypto from "crypto";
-
-function sha256(text: string) {
-  return crypto.createHash("sha256").update(text).digest("hex");
-}
-
 const SECRET_TEXT = "asdfghjklñpoiuytre"; // ENV VAR
 
-export async function signUp(userData) {
-  const {
-    fullName,
-    email,
-    password,
-  }: { fullName: string; email: string; password: string } = userData;
+export async function signUp(userData, password) {
+  const { fullName, email }: { fullName: string; email: string } = userData;
 
   if (userData) {
     // TABLE USERS:
@@ -36,8 +26,8 @@ export async function signUp(userData) {
         where: { userId: user.get("id") },
 
         defaults: {
-          email: email,
-          password: sha256(password),
+          email,
+          password,
           userId: user.get("id"),
         },
       });
@@ -50,25 +40,30 @@ export async function signUp(userData) {
   }
 }
 
-export async function createToken(userData) {
-  const { password }: { email: string; password: string } = userData;
+export async function createToken(email, password) {
+  try {
+    const userFound = await Auth.findOne({
+      where: {
+        email,
+        password,
+      },
+    });
 
-  const userFound = await Auth.findOne({
-    where: {
-      password: sha256(password),
-    },
-  });
+    if (userFound === null) {
+      console.error("User not Found! Email or Password incorrect, auth-controller.ts - createToken()");
+      const error = "User not Found! Email or Password incorrect, auth-controller.ts - createToken()";
+      return error;
+    } else {
+      const token = jwt.sign({ id: userFound.get("userId") }, SECRET_TEXT);
 
-  if (userFound === null) {
-    throw "User not Found! Email or Password incorrect";
-  } else {
-    const token = jwt.sign({ id: userFound.get("userId") }, SECRET_TEXT);
-
-    return { token };
+      return { token, userFound };
+    }
+  } catch (err) {
+    console.error(err);
   }
 }
 
-export async function userExist(email: string) {
+export async function userRegistered(email: string) {
   const userFound = await User.findOne({ where: { email } });
 
   return userFound ? true : false;

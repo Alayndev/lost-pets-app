@@ -9,13 +9,12 @@ import {
   getUserProfile,
   createPet,
 } from "./controllers/users-controller";
-import { signUp, userExist } from "./controllers/auth-controller";
+import { signUp, userRegistered } from "./controllers/auth-controller";
 import { createToken } from "./controllers/auth-controller";
 import { getUserPets } from "./controllers/products-controller";
 
-import * as jwt from "jsonwebtoken";
-
-const SECRET_TEXT = "asdfghjklñpoiuytre";
+// Middlewares
+import { authMiddleware, hashPassword } from "./middlewares";
 
 // EXPRESS CONFIG
 const app = express();
@@ -29,9 +28,9 @@ sequelize
   .then(() => console.log("Connection has been established successfully."))
   .catch((err) => console.log("Error: " + err));
 
-///////////// ENDPOINTS: Postman API Auth Relations Sequelize /////////////
+//--------------------------------- ENDPOINTS: ----------------------------------//
 
-app.get("/users/exist", async (req, res) => {
+app.get("/users/registered", async (req, res) => {
   const { email }: { email: string } = req.query;
 
   if (!email) {
@@ -41,7 +40,7 @@ app.get("/users/exist", async (req, res) => {
   }
 
   try {
-    const exist = await userExist(email);
+    const exist = await userRegistered(email);
 
     res.send({ email, exist });
   } catch (err) {
@@ -49,7 +48,7 @@ app.get("/users/exist", async (req, res) => {
   }
 });
 
-app.post("/auth", async (req, res) => {
+app.post("/auth", hashPassword, async (req, res) => {
   const { email, password }: { email: string; password: string } = req.body;
 
   if (!email || !password) {
@@ -60,15 +59,15 @@ app.post("/auth", async (req, res) => {
   }
 
   try {
-    const user = await signUp(req.body);
+    const { user, userCreated } = await signUp(req.body, req._hashPassword);
 
-    res.status(201).json({ user });
+    res.status(201).json({ user, userCreated });
   } catch (err) {
     res.status(400).json({ err });
   }
 });
 
-app.post("/auth/token", async (req, res) => {
+app.post("/auth/token", hashPassword, async (req, res) => {
   const { email, password }: { email: string; password: string } = req.body;
 
   if (!email || !password) {
@@ -79,33 +78,13 @@ app.post("/auth/token", async (req, res) => {
   }
 
   try {
-    const token = await createToken(req.body);
+    const token = await createToken(email, req._hashPassword); 
 
     res.status(200).json({ token });
   } catch (err) {
     res.status(400).json({ err });
   }
 });
-
-function authMiddleware(req, res, next) {
-  const authHeader: string = req.get("Authorization");
-
-  if (!authHeader) {
-    res.status(401).json({ error: "Header Authorization does not exist" });
-  }
-
-  try {
-    const token = authHeader.split(" ")[1];
-
-    const tokenJSON = jwt.verify(token, SECRET_TEXT);
-
-    req._user = tokenJSON;
-
-    next();
-  } catch (err) {
-    res.status(401).json({ error: err });
-  }
-}
 
 // POST /products: Crear un endpoint POST /products, que permita crear productos y estos estén vinculados al User que el token indica. O sea que este endpoint solo debe recibir la data del nuevo producto y nada relacionado al User a relacionar, esto debe ser extraido del token cómo ya vimos en el proceso de auth.
 app.post("/products", authMiddleware, async (req, res) => {
@@ -192,7 +171,7 @@ app.get("/profile", async (req, res) => {
   }
 });
 
-// Servir el Front: MOVER CONST
+//////////////////// Servir el Front: MOVER CONST
 const staticDirPath = path.resolve(__dirname, "../public"); // CAMBIAR A CARPETA QUE ESCUPE PARCEL (public-dist/dist)
 
 app.use(express.static(staticDirPath));
