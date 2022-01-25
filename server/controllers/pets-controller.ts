@@ -1,22 +1,47 @@
 import { User, Pet } from "../models"; // Controller invocan a capa Model
 
-export async function getUserPets(userId) {
-    if (userId) {
-        try {
-            const Pets = await Pet.findAll({
-                where: { userId: userId }, // Obtenemos el id del user mediante el token. Previamente, en authMiddleware, chequemos que el token sea válido y firmado por nosotros. De resultar así, tenemos el JSON escondido en ese token que incluye el id (linea 94 - al crear el token)
-                
-                include: [User],
-            });
-            
-            return { Pets };
-        } catch (err) {
-            throw err;
-        }
-    } else {
-        throw "Controller without userId";
+export async function createPet(userId: number, petData) {
+  const { title, price } = petData;
+
+  if (!userId) {
+    throw "Parameter userId does not exist";
+  }
+
+  if (userId) {
+    try {
+      const [pet, petCreated] = await Pet.findOrCreate({
+        // To make sure that the user do not post more than one Pet with the same data
+        where: {
+          title,
+          price,
+          userId: userId,
+        },
+
+        defaults: {
+          ...petData,
+          userId: userId,
+        },
+      });
+
+      return { petCreated, pet };
+    } catch (err) {
+      return err;
     }
+  }
 }
 
-// DUDA: Pets-controller.ts --> getUserPets: DEBERÍA IR EN users-controller.ts? Ya que son los Pets de un user en particular. O está bien acá xq hacemos la llamda a la table Pets? 
+export async function getUserPets(userId) {
+  try {
+    const pets = await Pet.findAll({
+      where: { userId: userId, state: true },
 
+      include: [User],
+    });
+
+    return { pets };
+  } catch (err) {
+    throw err;
+  }
+}
+
+// DUDA: Pets-controller.ts --> getUserPets: DEBERÍA IR EN users-controller.ts? Ya que son los Pets de un user en particular. O está bien acá xq hacemos la llamada a la table Pets?

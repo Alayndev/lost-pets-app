@@ -5,20 +5,35 @@ import * as jwt from "jsonwebtoken";
 const SECRET_TEXT = "asdfghjklñpoiuytre"; // ENV VAR
 
 export async function authSignUp(user, password) {
-  // TABLE AUTH:
-  const [auth, authCreated] = await Auth.findOrCreate({
-    where: { userId: user.get("id") },
+  if (!user || !password) {
+    const error = "Controller authSignUp() without user and/or password";
+    return { error };
+  }
 
-    defaults: {
-      email: user.get("email"),
-      password,
-      userId: user.get("id"),
-    },
-  });
-  return { auth, authCreated };
+  try {
+    // TABLE AUTH:
+    const [auth, authCreated] = await Auth.findOrCreate({
+      where: { userId: user.get("id") },
+
+      defaults: {
+        email: user.get("email"),
+        password,
+        userId: user.get("id"),
+      },
+    });
+    return { auth, authCreated };
+  } catch (error) {
+    console.error(error);
+    return { error };
+  }
 }
 
 export async function createToken(email, password) {
+  if (!email || !password) {
+    const error = "Controller createToken() without email and/or password";
+    return { error };
+  }
+
   try {
     const userFound = await Auth.findOne({
       where: {
@@ -37,7 +52,8 @@ export async function createToken(email, password) {
 
       return { token, userFound };
     }
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
+    return { error };
   }
 }

@@ -3,15 +3,31 @@ import { User, Pet, Auth } from "../models"; // Controller invocan a capa Model
 import { cloudinary } from "../lib/cloudinary";
 
 export async function userRegistered(email: string) {
-  const userFound = await User.findOne({ where: { email } });
+  if (!email) {
+    const error = "Controller userRegistered() without email";
+    return { error };
+  }
 
-  return { exist: userFound ? true : false, userFound };
+  try {
+    const userFound = await User.findOne({ where: { email } });
+
+    return { exist: userFound ? true : false, userFound };
+  } catch (error) {
+    console.error(error);
+
+    return { error };
+  }
 }
 
 export async function userSignUp(userData) {
   const { fullName, email }: { fullName: string; email: string } = userData;
 
-  if (userData) {
+  if (!userData) {
+    const error = "Controller userSignUp() without userData";
+    return { error };
+  }
+
+  try {
     // TABLE USERS:
     const [user, userCreated] = await User.findOrCreate({
       where: { email: email },
@@ -24,16 +40,16 @@ export async function userSignUp(userData) {
     });
 
     return { user, userCreated };
-  } else {
-    throw "Controller without userData";
+  } catch (error) {
+    console.error(error);
+    return { error };
   }
 }
 
-export async function getUserProfile(userId) {
+export async function getUserProfile(userId: number) {
   if (!userId) {
-    throw new Error(
-      " No hay userId en users-controller.ts - getUserProfile() "
-    );
+    const error = "Controller getUserProfile() without userId";
+    return { error };
   }
 
   try {
@@ -42,6 +58,32 @@ export async function getUserProfile(userId) {
     return userProfile;
   } catch (err) {
     console.error({ err });
+    return { err };
+  }
+}
+
+export async function updateUserProfile(userId: number, userData) {
+  const { email, fullName }: { email: string; fullName: string } = userData;
+
+  if (!userId || !userData) {
+    const error = "Controller updateUserProfile() without userId or userData";
+    return { error };
+  }
+
+  try {
+    const userUpdated = await User.update(
+      { fullName, email: email },
+      {
+        where: {
+          id: userId,
+        },
+      }
+    );
+
+    return userUpdated;
+  } catch (error) {
+    console.error(error);
+    return { error };
   }
 }
 
@@ -81,37 +123,5 @@ export async function createUser(userId, userData) {
     }
   } else {
     console.error("No hay pictureURL en users-controller.ts - createUser()");
-  }
-}
-
-// Teoria 34 - La idea es que estas funciones Controllers funcionen independientemente de que sean llamadas por View/endpoints (NO debe importar si son llamadas por express o por X) o mismo desde otras funciones Controllers
-// Aquí sucede la comunicación con la/s DB/s haciendo uso de las llamadas async de los Models sequelize/capa Model del patrón de arquitectura MVC
-export async function createPet(userId: number, PetData) {
-  const { title, price } = PetData;
-
-  if (!userId) {
-    throw "Parameter userId does not exist";
-  }
-
-  if (userId) {
-    try {
-      const [pet, petCreated] = await Pet.findOrCreate({
-        // To make sure that the user do not post more than one Pet with the same data
-        where: {
-          title,
-          price,
-          userId: userId,
-        },
-
-        defaults: {
-          ...PetData,
-          userId: userId,
-        },
-      });
-
-      return { petCreated, pet };
-    } catch (err) {
-      return err;
-    }
   }
 }

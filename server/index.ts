@@ -8,14 +8,13 @@ import {
   userRegistered,
   userSignUp,
   getUserProfile,
-  createUser,
-  createPet,
+  updateUserProfile,
 } from "./controllers/users-controller";
 import { authSignUp, createToken } from "./controllers/auth-controller";
-import { getUserPets } from "./controllers/pets-controller";
+import { getUserPets, createPet } from "./controllers/pets-controller";
 
 // Middlewares
-import { authMiddleware, hashPassword } from "./middlewares"; // CREAR MIDDLEWARES PARA DIF. CHEQUEOS DE BODY (emailAndPasswordBodyCheck - emailBodyCheck - etc.) 
+import { authMiddleware, hashPassword } from "./middlewares";
 
 // EXPRESS CONFIG
 const app = express();
@@ -30,7 +29,9 @@ sequelize
   .catch((err) => console.log("Error: " + err));
 
 //--------------------------------- ENDPOINTS: ----------------------------------//
+// CREAR MIDDLEWARES PARA DIF. CHEQUEOS DE BODY (emailAndPasswordBodyCheck - emailBodyCheck - etc.)
 
+// ----------------- AUTH SYSTEM:
 app.get("/users/registered", async (req, res) => {
   const { email }: { email: string } = req.query;
 
@@ -103,7 +104,8 @@ app.get("/users/profile", authMiddleware, async (req, res) => {
 
   if (!id) {
     res.status(400).json({
-      message: "This enpoint needs: id",
+      message:
+        "This enpoint needs: id - Probably authMiddleware() failed OR the token did not have an id inside, check the endpoint POST /auth/token",
     });
   }
 
@@ -116,76 +118,66 @@ app.get("/users/profile", authMiddleware, async (req, res) => {
   }
 });
 
-// BUSCAR ENDPOINT TEORIA PARA ACTUALIZAR HACIENDO UN SOLO LLAMADO A LA DB
-app.patch("/users/profile", authMiddleware, async (req, res) => {});
+app.patch("/users/profile", authMiddleware, async (req, res) => {
+  const { id } = req._user;
 
-app.get("/users/pets", authMiddleware, async (req, res) => {});
+  const { email, fullName }: { email: string; fullName: string } = req.body;
 
+  if (!email && !fullName) {
+    res.status(400).json({
+      message:
+        "Bad Request! You should include values for the columns email or fullName (both or one of them)",
+    });
+  }
 
+  if (!id) {
+    res.status(400).json({
+      message:
+        "This enpoint needs: id - Probably authMiddleware() failed OR the token did not have an id inside, check the endpoint POST /auth/token",
+    });
+  }
 
-// --------------------------------- ENDPOINTS DE AYUDA: --------------------//
+  try {
+    const usersUpdated = await updateUserProfile(id, req.body);
 
+    res.status(200).json({ usersUpdated, userWhoWasUpdated: id });
+  } catch (err) {
+    res.status(400).json({ err });
+  }
+});
+
+// ----------------- PETS: (De acá en adelante)
+
+// CREAR PET
 // POST /products: Crear un endpoint POST /products, que permita crear productos y estos estén vinculados al User que el token indica. O sea que este endpoint solo debe recibir la data del nuevo producto y nada relacionado al User a relacionar, esto debe ser extraido del token cómo ya vimos en el proceso de auth.
-app.post("/products", authMiddleware, async (req, res) => {
-  const body = req.body;
-  const userId = req._user.id;
+app.post("/users/pets", authMiddleware, async (req, res) => {
+  const { id } = req._user;
 
-  if (!body.title || !body.price) {
-    res
-      .status(400)
-      .json({ message: "This endpoint needs values for title and price" });
-  }
-
-  if (!userId) {
+  if (!id) {
     res.status(400).json({
       message:
-        "The token did not have an id inside, check the endpoint POST /auth/token",
+        "This enpoint needs: id - Probably authMiddleware() failed OR the token did not have an id inside, check the endpoint POST /auth/token",
     });
-  }
-
-  try {
-    const product = await createPet(userId, body);
-
-    res.status(201).json({ product });
-  } catch (err) {
-    res.status(400).json({ err });
   }
 });
 
-// GET /me/products: Crear un endpoint GET /me/products que me devuelva todos mis productos.
-app.get("/me/products", authMiddleware, async (req, res) => {
-  const userId = req._user.id;
+// GET /users/pets: DEBE TRAERNOS LA/S PETS DE UN USER Y EL USER
+// CREAR PETS PARA DIF. USERS. DEBE TRAERNOS LA/S PETS DE ESE USER Y EL USER
+// DUDA: Pets-controller.ts --> getUserPets: DEBERÍA IR EN users-controller.ts? Ya que son los Pets de un user en particular. O está bien acá xq hacemos la llamada a la table Pets?
+app.get("/users/pets", authMiddleware, async (req, res) => {
+  const { id } = req._user;
 
-  if (!userId) {
+  if (!id) {
     res.status(400).json({
       message:
-        "The token did not have an id inside, check the endpoint POST /auth/token",
+        "This enpoint needs: id - Probably authMiddleware() failed OR the token did not have an id inside, check the endpoint POST /auth/token",
     });
   }
 
   try {
-    const userProducts = await getUserPets(userId);
-    res.status(200).json({ userProducts });
-  } catch (err) {
-    res.status(400).json({ err });
-  }
-});
+    const userPets = await getUserPets(id);
 
-// DUDA: Es para crear o actualizar? Xq si es para actualizar, como hace Marce, debería ser PATCH. HACER AMBOS ENDPOINTS, PARA CREAR Y PARA UPDATE CON PATCH
-app.post("/profile", async (req, res) => {
-  const { fullName, bio, pictureURL } = req.body;
-
-  if (!fullName || !bio || !pictureURL) {
-    res.status(400).json({
-      message: "This enpoint needs: fullName - bio - pictureURL",
-    });
-  }
-
-  try {
-    const user = await createUser(1, req.body);
-    console.log(user);
-
-    res.status(201).json({ user, message: true });
+    res.status(200).json({ userPets });
   } catch (err) {
     res.status(400).json({ err });
   }
