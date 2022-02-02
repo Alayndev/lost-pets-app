@@ -1,16 +1,16 @@
 {
   "name": "lost-pets-app",
   "version": "1.0.0",
-  "main": "index.js",
   "license": "MIT",
   "scripts": {
     "sync": "ts-node ./server/sync.ts",
 
     "dev:api": "nodemon --watch ./server/index.ts --exec ts-node ./server/index.ts",
-    "dev:front": "live-server ./public",
+    "dev:front": "parcel serve ./public/index.html",
     
     "build:api": "tsc",
-    "build": "npm run build:api",
+    "build:front": "parcel build ./public/index.html",
+    "build": "npm run build:api && npm run build:front",
 
     "start": "node ./server-dist/index.js"
   },

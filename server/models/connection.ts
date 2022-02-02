@@ -7,8 +7,6 @@ const sequelize = new Sequelize({
   database: "dcu1km25bjk7oo",
   port: 5432,
   host: "ec2-3-209-234-80.compute-1.amazonaws.com",
-
-  // Esto es necesario para que corra correctamente
   ssl: true,
   dialectOptions: {
     ssl: {
@@ -18,4 +16,11 @@ const sequelize = new Sequelize({
   },
 });
 
-export { sequelize };
+const test = async function testingConnection() {
+  return sequelize
+    .authenticate()
+    .then(() => console.log("Connection has been established successfully."))
+    .catch((err) => console.log("Error: " + err));
+};
+
+export { sequelize, test };

@@ -3,6 +3,6 @@ import "./models";
 
 // SYNC:
 (async () => {
-  const resp = await sequelize.sync({ force: true });
-  console.log(resp);
+  const resp = await sequelize.sync({ alter: true });
+   console.log(resp);
 })();

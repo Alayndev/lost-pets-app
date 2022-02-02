@@ -1,4 +1,4 @@
-import { sequelize } from "./models/connection"; // Connection to RDB (Heroku Postgres)
+import { test } from "./models/connection";
 import * as express from "express";
 import * as cors from "cors";
 import * as path from "path";
@@ -22,11 +22,8 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(cors());
 
-// TESTING CONNECTION:
-sequelize
-  .authenticate()
-  .then(() => console.log("Connection has been established successfully."))
-  .catch((err) => console.log("Error: " + err));
+// TESTING CONNECTION - DB POSTGRES HEROKU:
+test();
 
 //--------------------------------- ENDPOINTS: ----------------------------------//
 // CREAR MIDDLEWARES PARA DIF. CHEQUEOS DE BODY (emailAndPasswordBodyCheck - emailBodyCheck - etc.)
