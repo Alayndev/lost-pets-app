@@ -4,6 +4,7 @@ import { sequelize } from "./connection";
 
 class User extends Model {}
 
+// User model - Users table:
 User.init(
   {
     fullName: {

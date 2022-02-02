@@ -1,32 +1,40 @@
 import { User, Pet } from "../models"; // Controller invocan a capa Model
 
-export async function createPet(userId: number, petData) {
-  const { title, price } = petData;
+export async function createPet(userId: number, petData, pictureURL) {
+  const { fullName, lat, lng, description } = petData;
 
-  if (!userId) {
-    throw "Parameter userId does not exist";
+  if (!petData || !userId) {
+    const error =
+      "Parameter userId or petData does not exist - createPet() - pets-controller.ts";
+    return { error };
   }
 
-  if (userId) {
-    try {
-      const [pet, petCreated] = await Pet.findOrCreate({
-        // To make sure that the user do not post more than one Pet with the same data
-        where: {
-          title,
-          price,
-          userId: userId,
-        },
+  try {
+    // TABLE PETS
+    const [pet, petCreated] = await Pet.findOrCreate({
+      // To make sure that the user do not post more than one Pet with the same data
+      where: {
+        fullName,
+        lat,
+        lng,
+        userId,
+      },
 
-        defaults: {
-          ...petData,
-          userId: userId,
-        },
-      });
+      defaults: {
+        fullName,
+        lat,
+        lng,
+        pictureURL,
+        description,
+        state: true,
+        userId,
+      },
+    });
 
-      return { petCreated, pet };
-    } catch (err) {
-      return err;
-    }
+    return { pet, petCreated };
+  } catch (error) {
+    console.error(error);
+    return { error };
   }
 }
 

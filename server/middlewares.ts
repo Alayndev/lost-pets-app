@@ -16,7 +16,7 @@ export function hashPassword(req, res, next) {
   } else {
     res
       .status(400)
-      .json({ message: "Middleware hashPassword without password" });
+      .json({ message: "Middleware hashPassword() without password parameter" });
   }
 }
 

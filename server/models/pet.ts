@@ -4,6 +4,7 @@ import { sequelize } from "./connection";
 
 class Pet extends Model {}
 
+// Pet model - Pets table:
 Pet.init(
   {
     fullName: {
@@ -12,7 +13,7 @@ Pet.init(
     },
 
     lat: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING, // Quizá deba ser un FLOAT para consumirlo desde el Front más comodamente, Algolia lo convierte en string para hacer _geosearch
       allowNull: false,
     },
 

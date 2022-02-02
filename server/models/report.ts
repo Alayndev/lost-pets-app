@@ -4,6 +4,7 @@ import { sequelize } from "./connection";
 
 class Report extends Model {}
 
+// Report model - Reports table:
 Report.init(
   {
     fullName: {

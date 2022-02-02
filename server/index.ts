@@ -16,6 +16,10 @@ import { getUserPets, createPet } from "./controllers/pets-controller";
 // Middlewares
 import { authMiddleware, hashPassword } from "./middlewares";
 
+// Lib
+import { createPetAlgolia } from "./lib/algolia";
+import { uploadPictureCloudinay } from "./lib/cloudinary";
+
 // EXPRESS CONFIG
 const app = express();
 const port = process.env.PORT || 3000;
@@ -115,6 +119,7 @@ app.get("/users/profile", authMiddleware, async (req, res) => {
   }
 });
 
+// DUDA: No debería actualizar el email en table Auth también? De no hacer update en Auth, además de tener los emails desincronizados, al crear el token debemos pasarle el email viejo, o es que ya está creado y no importa?
 app.patch("/users/profile", authMiddleware, async (req, res) => {
   const { id } = req._user;
 
@@ -135,7 +140,14 @@ app.patch("/users/profile", authMiddleware, async (req, res) => {
   }
 
   try {
+    // DUDA: No debería actualizar el email en table Auth también?
     const usersUpdated = await updateUserProfile(id, req.body);
+
+    // if (email) {
+    //   const authUpdated = await updateUserRecord(id, req.body);
+
+    //   res.status(200).json({ usersUpdated, authUpdated, userWhoWasUpdated: id });
+    // }
 
     res.status(200).json({ usersUpdated, userWhoWasUpdated: id });
   } catch (err) {
@@ -145,8 +157,6 @@ app.patch("/users/profile", authMiddleware, async (req, res) => {
 
 // ----------------- PETS: (De acá en adelante)
 
-// CREAR PET
-// POST /products: Crear un endpoint POST /products, que permita crear productos y estos estén vinculados al User que el token indica. O sea que este endpoint solo debe recibir la data del nuevo producto y nada relacionado al User a relacionar, esto debe ser extraido del token cómo ya vimos en el proceso de auth.
 app.post("/users/pets", authMiddleware, async (req, res) => {
   const { id } = req._user;
 
@@ -155,6 +165,22 @@ app.post("/users/pets", authMiddleware, async (req, res) => {
       message:
         "This enpoint needs: id - Probably authMiddleware() failed OR the token did not have an id inside, check the endpoint POST /auth/token",
     });
+  }
+
+  try {
+    const pictureURL = await uploadPictureCloudinay(req.body.dataURL);
+
+    const { pet, petCreated } = await createPet(id, req.body, pictureURL);
+
+    if (petCreated) {
+      const algoliaPetCreated = await createPetAlgolia(pet);
+
+      res.status(201).json({ pet, petCreated, algoliaPetCreated });
+    }
+
+    res.status(201).json({ pet, petCreated });
+  } catch (error) {
+    res.status(400).json({ error });
   }
 });
 
@@ -181,7 +207,7 @@ app.get("/users/pets", authMiddleware, async (req, res) => {
 });
 
 //---------------------------------- Servir el Front: ----------------------------------//
-const staticDirPath = path.resolve(__dirname, "../public"); // MOVER CONST Y CAMBIAR A CARPETA QUE ESCUPE PARCEL (public-dist/dist)
+const staticDirPath = path.resolve(__dirname, "../dist");
 
 app.use(express.static(staticDirPath));
 

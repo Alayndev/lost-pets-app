@@ -62,6 +62,7 @@ export async function getUserProfile(userId: number) {
   }
 }
 
+// DUDA: No debería actualizar el email en table Auth también? 
 export async function updateUserProfile(userId: number, userData) {
   const { email, fullName }: { email: string; fullName: string } = userData;
 

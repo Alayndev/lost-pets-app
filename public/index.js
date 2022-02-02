@@ -22,13 +22,14 @@ function main() {
     console.log(newUserPromise, "Hola");
 
     const res = await newUserPromise;
+    console.log(res, "Res");
 
-    if (!res.exist) {
+    if (!res.exist.exist) {
       console.log("NO resgistrado, POST /auth");
       const divEl = document.querySelector(".user-data");
       divEl.innerHTML = `
       <div class="user-data">
-        <h2>Mis datos</h2>
+        <h2>Mis datos - NO registrado</h2>
         
         <form class="form">
           <div> Nombre: </div>
@@ -49,7 +50,7 @@ function main() {
       );
       const divEl = document.querySelector(".user-data");
       divEl.innerHTML = `    <div class="signin">
-      <h2>Ingresar</h2>
+        <h2>Registrado</h2>
 
         <form class="form">
           <div> Contraseña: </div>
