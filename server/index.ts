@@ -11,14 +11,18 @@ import {
   updateUserProfile,
 } from "./controllers/users-controller";
 import { authSignUp, createToken } from "./controllers/auth-controller";
-import { getUserPets, createPet } from "./controllers/pets-controller";
+import {
+  getUserPets,
+  createPet,
+  updatePet,
+} from "./controllers/pets-controller";
 
 // Middlewares
 import { authMiddleware, hashPassword } from "./middlewares";
 
 // Lib
-import { createPetAlgolia } from "./lib/algolia";
-import { uploadPictureCloudinay } from "./lib/cloudinary";
+import { createPetAlgolia, updatePetAlgolia } from "./lib/algolia";
+import { uploadPictureCloudinary } from "./lib/cloudinary";
 
 // EXPRESS CONFIG
 const app = express();
@@ -168,7 +172,7 @@ app.post("/users/pets", authMiddleware, async (req, res) => {
   }
 
   try {
-    const pictureURL = await uploadPictureCloudinay(req.body.dataURL);
+    const pictureURL = await uploadPictureCloudinary(req.body.dataURL);
 
     const { pet, petCreated } = await createPet(id, req.body, pictureURL);
 
@@ -179,6 +183,44 @@ app.post("/users/pets", authMiddleware, async (req, res) => {
     }
 
     res.status(201).json({ pet, petCreated });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
+// Docs Postman: Update parcial en Postgres Heroku y Algolia de la pet recibida por query. De no pasarme nada en el body para actualizar, 400 - De no encontrar petId en table Pets, 404 (linea 218) - De no pasarme dataURL, 400.
+// TIP: Estaría bueno que dataURL no sea obligatorio, sino opcional
+app.patch("/users/pets", async (req, res) => {
+  const { fullName, lat, lng, description, dataURL } = req.body;
+  const { petId } = req.query;
+
+  // Make it a middleware - Para chequear que me pasan algo para actualizar, sino no tiene sentido hacer las llamadas async
+  if (!fullName && !lat && !lng && !description && !dataURL) {
+    res
+      .status(400)
+      .json({ error: "The client did not send any information to update" });
+  }
+
+  // Xq sino falla uploadPictureCloudinary() - No se me ocurre otra solución por el momento
+  if (!dataURL) {
+    res.status(400).json({
+      message:
+        "This enpoint needs: dataURL. Make sure to add it inside the body request",
+    });
+  }
+
+  try {
+    const pictureURL = await uploadPictureCloudinary(dataURL);
+
+    const petUpdated = await updatePet(req.body, pictureURL, petId);
+
+    if (petUpdated.error) {
+      res.status(404).json({ error: petUpdated.error });
+    }
+
+    const algoliaPetUpdated = await updatePetAlgolia(petUpdated);
+
+    res.status(201).json({ petUpdated, algoliaPetUpdated });
   } catch (error) {
     res.status(400).json({ error });
   }

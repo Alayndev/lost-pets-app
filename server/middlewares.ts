@@ -14,9 +14,9 @@ export function hashPassword(req, res, next) {
       .digest("hex");
     next();
   } else {
-    res
-      .status(400)
-      .json({ message: "Middleware hashPassword() without password parameter" });
+    res.status(400).json({
+      message: "Middleware hashPassword() without password parameter",
+    });
   }
 }
 
@@ -38,4 +38,26 @@ export function authMiddleware(req, res, next) {
   } catch (err) {
     res.status(401).json({ err });
   }
+}
+
+//Function para formatear data para pasarle a Algolia
+export function bodyToIndexAlgolia(body, id: number) {
+  const res: any = {};
+
+  if (id) {
+    res.objectID = id;
+  }
+
+  if (body.fullName) {
+    res.fullName = body.fullName;
+  }
+
+  if (body.lat && body.lng) {
+    res._geoloc = {
+      lat: body.lat,
+      lng: body.lng,
+    };
+  }
+
+  return res;
 }

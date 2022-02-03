@@ -1,4 +1,5 @@
 import { User, Pet } from "../models"; // Controller invocan a capa Model
+import { bodyToIndexAlgolia } from "../middlewares";
 
 export async function createPet(userId: number, petData, pictureURL) {
   const { fullName, lat, lng, description } = petData;
@@ -24,8 +25,8 @@ export async function createPet(userId: number, petData, pictureURL) {
         fullName,
         lat,
         lng,
-        pictureURL,
         description,
+        pictureURL,
         state: true,
         userId,
       },
@@ -36,6 +37,31 @@ export async function createPet(userId: number, petData, pictureURL) {
     console.error(error);
     return { error };
   }
+}
+
+export async function updatePet(petData, pictureURL, petId: number) {
+  const { fullName, lat, lng, description } = petData;
+
+  if (!petData || !petId) {
+    const error =
+      "Parameter petId or petData does not exist - updatePet() - pets-controller.ts";
+    return { error };
+  }
+
+  try {
+    const petsUpdated = await Pet.update(
+      { fullName, lat, lng, description, pictureURL },
+      { where: { id: petId } }
+    );
+
+    if (petsUpdated > [0]) {
+      const petDataToAlgolia = bodyToIndexAlgolia(petData, petId);
+      return { petsUpdated, petDataToAlgolia };
+    } else {
+      const error = "Pet not found - The petId is wrong or does not exist";
+      return { error };
+    }
+  } catch (error) {}
 }
 
 // DUDA: Pets-controller.ts --> getUserPets: DEBERÍA IR EN users-controller.ts? Ya que son los Pets de un user en particular. O está bien acá xq hacemos la llamada a la table Pets?
@@ -56,4 +82,3 @@ export async function getUserPets(userId: number) {
     throw err;
   }
 }
-

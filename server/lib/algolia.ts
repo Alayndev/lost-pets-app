@@ -22,4 +22,17 @@ export async function createPetAlgolia(pet) {
   }
 }
 
+export async function updatePetAlgolia(pet) {
+  const { petDataToAlgolia } = pet;
+  
+  try {
+    const petUpdated = await index.partialUpdateObject(petDataToAlgolia);
+
+    return petUpdated;
+  } catch (error) {
+    console.error(error);
+    return { error };
+  }
+}
+
 export { index };

@@ -8,7 +8,7 @@ cloudinary.config({
 });
 
 // Recibe dataURL - devuelve URL
-export async function uploadPictureCloudinay(dataURL: string) {
+export async function uploadPictureCloudinary(dataURL: string) {
   try {
     const pictureURL = await cloudinary.uploader.upload(dataURL, {
       resource_type: "image",
