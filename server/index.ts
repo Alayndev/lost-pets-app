@@ -184,8 +184,6 @@ app.post("/users/pets", authMiddleware, async (req, res) => {
   }
 });
 
-// GET /users/pets: DEBE TRAERNOS LA/S PETS DE UN USER Y EL USER
-// CREAR PETS PARA DIF. USERS. DEBE TRAERNOS LA/S PETS DE ESE USER Y EL USER
 // DUDA: Pets-controller.ts --> getUserPets: DEBERÍA IR EN users-controller.ts? Ya que son los Pets de un user en particular. O está bien acá xq hacemos la llamada a la table Pets?
 app.get("/users/pets", authMiddleware, async (req, res) => {
   const { id } = req._user;
