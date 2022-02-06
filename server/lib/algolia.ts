@@ -24,7 +24,7 @@ export async function createPetAlgolia(pet) {
 
 export async function updatePetAlgolia(pet) {
   const { petDataToAlgolia } = pet;
-  
+
   try {
     const petUpdated = await index.partialUpdateObject(petDataToAlgolia);
 
@@ -33,6 +33,22 @@ export async function updatePetAlgolia(pet) {
     console.error(error);
     return { error };
   }
+}
+
+export async function searchPetsAround(lat, lng) {
+  const { hits, nbHits } = await index.search("", {
+    aroundLatLng: [lat, lng].join(","),
+
+    aroundRadius: 10000, // 10 km
+  });
+
+  return { hits, nbHits };
+}
+
+export async function deletePetAlgolia(petId) {
+  const algoliaPetDeleted = await index.deleteObject(petId);
+
+  return { algoliaPetDeleted };
 }
 
 export { index };

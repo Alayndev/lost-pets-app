@@ -15,13 +15,20 @@ import {
   getUserPets,
   createPet,
   updatePet,
+  findOnePet,
+  deletePet,
 } from "./controllers/pets-controller";
 
 // Middlewares
 import { authMiddleware, hashPassword } from "./middlewares";
 
 // Lib
-import { createPetAlgolia, updatePetAlgolia } from "./lib/algolia";
+import {
+  createPetAlgolia,
+  updatePetAlgolia,
+  searchPetsAround,
+  deletePetAlgolia,
+} from "./lib/algolia";
 import { uploadPictureCloudinary } from "./lib/cloudinary";
 
 // EXPRESS CONFIG
@@ -188,14 +195,19 @@ app.post("/users/pets", authMiddleware, async (req, res) => {
   }
 });
 
-// Docs Postman: Update parcial en Postgres Heroku y Algolia de la pet recibida por query. De no pasarme nada en el body para actualizar, 400 - De no encontrar petId en table Pets, 404 (linea 218) - De no pasarme dataURL, 400.
+// DUDA: No debería ser PATCH /pets ? No uso token
 // TIP: Estaría bueno que dataURL no sea obligatorio, sino opcional
 app.patch("/users/pets", async (req, res) => {
   const { fullName, lat, lng, description, dataURL } = req.body;
   const { petId } = req.query;
 
-  // Make it a middleware - Para chequear que me pasan algo para actualizar, sino no tiene sentido hacer las llamadas async
-  if (!fullName && !lat && !lng && !description && !dataURL) {
+  // Middleware - tmb en GET /pets
+  if (!petId) {
+    res.status(400).json({ error: "Missing petId query" });
+  }
+
+  // Make it a middleware - Cuando dataURL no sea obligatorio, incluirlo en el middleware - Para chequear que me pasan algo para actualizar, sino no tiene sentido hacer las llamadas async
+  if (!fullName && !lat && !lng && !description) {
     res
       .status(400)
       .json({ error: "The client did not send any information to update" });
@@ -216,11 +228,11 @@ app.patch("/users/pets", async (req, res) => {
 
     if (petUpdated.error) {
       res.status(404).json({ error: petUpdated.error });
+    } else {
+      const algoliaPetUpdated = await updatePetAlgolia(petUpdated);
+
+      res.status(201).json({ petUpdated, algoliaPetUpdated });
     }
-
-    const algoliaPetUpdated = await updatePetAlgolia(petUpdated);
-
-    res.status(201).json({ petUpdated, algoliaPetUpdated });
   } catch (error) {
     res.status(400).json({ error });
   }
@@ -243,6 +255,71 @@ app.get("/users/pets", authMiddleware, async (req, res) => {
     res.status(200).json({ userPets });
   } catch (err) {
     res.status(400).json({ err });
+  }
+});
+
+app.get("/pets/around", async (req, res) => {
+  const { lat, lng } = req.query;
+
+  // Middleware
+  if (!lat || !lng) {
+    res.status(400).json({
+      message:
+        "Bad Request! You should include values for the columns lat and lng",
+    });
+  }
+
+  try {
+    const petsAround = await searchPetsAround(lat, lng);
+
+    res.status(200).json({ petsAround });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
+app.get("/pets", async (req, res) => {
+  const { petId } = req.query;
+
+  // Middleware
+  if (!petId) {
+    res.status(400).json({ error: "Missing petId query" });
+  }
+
+  try {
+    const petFound = await findOnePet(petId);
+
+    if (petFound.error) {
+      res.status(404).json({ error: petFound.error });
+    } else {
+      res.status(200).json(petFound);
+    }
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
+// Funciona bien en ambas DB, pero devuelve error, hacer console.logs() para ver donde sucede
+app.delete("/pets", async (req, res) => {
+  const { petId } = req.query;
+
+  // Middleware
+  if (!petId) {
+    res.status(400).json({ error: "Missing petId query" });
+  }
+
+  try {
+    const petdeleted = await deletePet(petId);
+
+    if (petdeleted.error) {
+      res.json({ error: petdeleted.error });
+    } else {
+      const algoliaPetDeleted = await deletePetAlgolia(petId);
+
+      res.json(petdeleted, algoliaPetDeleted);
+    }
+  } catch (error) {
+    res.status(400).json({ error });
   }
 });
 

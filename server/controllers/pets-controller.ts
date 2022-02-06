@@ -61,7 +61,10 @@ export async function updatePet(petData, pictureURL, petId: number) {
       const error = "Pet not found - The petId is wrong or does not exist";
       return { error };
     }
-  } catch (error) {}
+  } catch (error) {
+    console.error(error);
+    return { error };
+  }
 }
 
 // DUDA: Pets-controller.ts --> getUserPets: DEBERÍA IR EN users-controller.ts? Ya que son los Pets de un user en particular. O está bien acá xq hacemos la llamada a la table Pets?
@@ -78,7 +81,43 @@ export async function getUserPets(userId: number) {
     } else {
       return [];
     }
-  } catch (err) {
-    throw err;
+  } catch (error) {
+    console.error(error);
+    return { error };
+  }
+}
+
+export async function findOnePet(petId: number) {
+  try {
+    const petFound = await Pet.findByPk(petId);
+
+    if (petFound) {
+      return { petFound };
+    } else {
+      const error = "Pet not found - The petId is wrong or does not exist";
+      return { error };
+    }
+  } catch (error) {
+    console.error(error);
+    return { error };
+  }
+}
+
+export async function deletePet(petId) {
+  try {
+    const petsDeleted = await Pet.update(
+      { state: false },
+      { where: { id: petId } }
+    );
+
+    if (petsDeleted > [0]) {
+      return { petsDeleted };
+    } else {
+      const error = "Pet not found - The petId is wrong or does not exist";
+      return { error };
+    }
+  } catch (error) {
+    console.error(error);
+    return { error };
   }
 }
