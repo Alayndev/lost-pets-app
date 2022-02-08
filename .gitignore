@@ -3,3 +3,4 @@ server-dist
 public-dist
 .parcel-cache
 dist
+.env

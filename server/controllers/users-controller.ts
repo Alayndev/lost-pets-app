@@ -1,4 +1,4 @@
-import { User, Pet, Auth } from "../models"; // Controller invocan a capa Model
+import { User } from "../models"; // Controller invocan a capa Model
 
 import { cloudinary } from "../lib/cloudinary";
 
@@ -62,7 +62,7 @@ export async function getUserProfile(userId: number) {
   }
 }
 
-// DUDA: No debería actualizar el email en table Auth también? 
+// DUDA: No debería actualizar el email en table Auth también?
 export async function updateUserProfile(userId: number, userData) {
   const { email, fullName }: { email: string; fullName: string } = userData;
 

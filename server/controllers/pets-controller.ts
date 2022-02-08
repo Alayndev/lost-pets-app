@@ -89,7 +89,7 @@ export async function getUserPets(userId: number) {
 
 export async function findOnePet(petId: number) {
   try {
-    const petFound = await Pet.findByPk(petId);
+    const petFound = await Pet.findOne({ where: { id: petId, state: true } });
 
     if (petFound) {
       return { petFound };
@@ -107,7 +107,7 @@ export async function deletePet(petId) {
   try {
     const petsDeleted = await Pet.update(
       { state: false },
-      { where: { id: petId } }
+      { where: { id: petId, state: true } } // Si no pongo state: true, siempre va a encontrar y va a hacer ese update, haciendo la llamada async a Algolia tmb al pedo
     );
 
     if (petsDeleted > [0]) {
@@ -120,4 +120,9 @@ export async function deletePet(petId) {
     console.error(error);
     return { error };
   }
+}
+
+export async function getPetAndOwner(petId) {
+  const petAndOwner = await Pet.findByPk(petId, { include: [User] });
+  return petAndOwner;
 }

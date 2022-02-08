@@ -17,7 +17,9 @@ import {
   updatePet,
   findOnePet,
   deletePet,
+  getPetAndOwner,
 } from "./controllers/pets-controller";
+import { createPetReport, userReports } from "./controllers/reports-controller";
 
 // Middlewares
 import { authMiddleware, hashPassword } from "./middlewares";
@@ -30,6 +32,7 @@ import {
   deletePetAlgolia,
 } from "./lib/algolia";
 import { uploadPictureCloudinary } from "./lib/cloudinary";
+import { sendEmail } from "./lib/sendgrid";
 
 // EXPRESS CONFIG
 const app = express();
@@ -299,7 +302,6 @@ app.get("/pets", async (req, res) => {
   }
 });
 
-// Funciona bien en ambas DB, pero devuelve error, hacer console.logs() para ver donde sucede
 app.delete("/pets", async (req, res) => {
   const { petId } = req.query;
 
@@ -312,12 +314,75 @@ app.delete("/pets", async (req, res) => {
     const petdeleted = await deletePet(petId);
 
     if (petdeleted.error) {
-      res.json({ error: petdeleted.error });
+      res.status(404).json({ error: petdeleted.error });
     } else {
       const algoliaPetDeleted = await deletePetAlgolia(petId);
 
-      res.json(petdeleted, algoliaPetDeleted);
+      res
+        .status(200)
+        .json({ petdeleted: petdeleted.petsDeleted, algoliaPetDeleted });
     }
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
+
+app.post("/pets/reports", authMiddleware, async (req, res) => {
+  const { petId } = req.query;
+  const { id } = req._user;
+  const { fullName, phoneNumber, report } = req.body;
+
+  // Middleware
+  if (!petId) {
+    res.status(400).json({ error: "Missing petId query" });
+  }
+
+  // Middleware para req.body - Obligatorio fullName - phoneNumber - report
+  if (!fullName || !phoneNumber || !report) {
+    res.status(400).json({
+      message:
+        "Bad Request! You should include values for the columns fullName - email - report",
+    });
+  }
+
+  try {
+    const reportCreated = await createPetReport(petId, id, req.body);
+
+    if (reportCreated.error) {
+      res.status(400).json({ error: reportCreated.error }); // Para que no manden el mismo report muchos users
+    } else {
+      const petAndOwner = await getPetAndOwner(petId);
+
+      // sendgrid
+      const sentEmail = await sendEmail(
+        petAndOwner.getDataValue("user").email, // owner - email del dueño de la mascota
+        reportCreated.reportRecord.getDataValue("phoneNumber"), // phoneNumber de quien reporta
+        petAndOwner.getDataValue("fullName"), // petName
+        reportCreated.reportRecord.getDataValue("report") // reporte
+      );
+
+      res.status(201).json({ reportCreated, petAndOwner, sentEmail });
+    }
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
+app.get("/users/reports", authMiddleware, async (req, res) => {
+  const { id } = req._user;
+
+  if (!id) {
+    res.status(400).json({
+      message:
+        "This enpoint needs: id - Probably authMiddleware() failed OR the token did not have an id inside, check the endpoint POST /auth/token",
+    });
+  }
+
+  try {
+    const reports = await userReports(id);
+
+    res.status(200).json(reports);
   } catch (error) {
     res.status(400).json({ error });
   }

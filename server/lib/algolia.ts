@@ -48,7 +48,7 @@ export async function searchPetsAround(lat, lng) {
 export async function deletePetAlgolia(petId) {
   const algoliaPetDeleted = await index.deleteObject(petId);
 
-  return { algoliaPetDeleted };
+  return algoliaPetDeleted;
 }
 
 export { index };

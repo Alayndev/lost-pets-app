@@ -12,7 +12,12 @@ Report.init(
       allowNull: false,
     },
 
-    email: {
+    phoneNumber: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+
+    report: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -24,11 +29,6 @@ Report.init(
     lng: {
       type: DataTypes.STRING,
     },
-
-    description: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
   },
   {
     sequelize,
@@ -37,3 +37,5 @@ Report.init(
 );
 
 export { Report };
+
+// userId - petId

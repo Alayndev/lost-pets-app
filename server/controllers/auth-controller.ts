@@ -1,4 +1,4 @@
-import { User, Auth } from "../models";
+import { Auth } from "../models";
 
 import * as jwt from "jsonwebtoken";
 
