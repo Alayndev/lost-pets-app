@@ -169,7 +169,7 @@ app.patch("/users/profile", authMiddleware, async (req, res) => {
   }
 });
 
-// ----------------- PETS: (De acá en adelante)
+// ----------------- PETS:
 
 app.post("/users/pets", authMiddleware, async (req, res) => {
   const { id } = req._user;
@@ -326,7 +326,6 @@ app.delete("/pets", async (req, res) => {
     res.status(400).json({ error });
   }
 });
-
 
 app.post("/pets/reports", authMiddleware, async (req, res) => {
   const { petId } = req.query;

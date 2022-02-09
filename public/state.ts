@@ -3,12 +3,14 @@
 //     ? "https://lost-pet-finder-app.herokuapp.com"
 //     : "http://localhost:3000";
 
-const API_URL = "http://localhost:3000";
+//const API_URL = "http://localhost:3000";
+const API_URL = "https://lost-pet-finder-app.herokuapp.com";
 
 const state = {
   data: {
     fullName: null,
     email: null,
+    _geoloc: {},
   },
 
   listeners: [],
@@ -36,13 +38,19 @@ const state = {
       cb();
     }
 
-    sessionStorage.setItem("actualgame", JSON.stringify(newState));
+    sessionStorage.setItem("actual state", JSON.stringify(newState));
 
     console.log("Soy el STATE, he cambiado. Aquí la nueva data:", this.data);
   },
 
   subscribe(cb) {
     this.listeners.push(cb);
+  },
+
+  // CREAR PETS CON POSTMAN CERCA DE MI LAT Y LNG, LUEGO HACER ESTA LLAMADA AL ENDPOINT
+  async getPetsAround() {
+    const { lat, lng } = this.getState()._geoloc;
+    return await fetch(`${API_URL}/pets/around?lat=${lat}&lng=${lng}`);
   },
 
   userRegistered(email) {
@@ -71,7 +79,7 @@ const state = {
 
   createToken() {
     // fetch("/auth/token")....
-    this.setToken(token);
+    //this.setToken(token);
   },
   setToken(token) {
     //localStorage.setItem("token", token)
