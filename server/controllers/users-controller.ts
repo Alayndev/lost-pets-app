@@ -1,4 +1,4 @@
-import { User } from "../models"; // Controller invocan a capa Model
+import { User, Pet } from "../models"; // Controller invocan a capa Model
 
 import { cloudinary } from "../lib/cloudinary";
 
@@ -88,6 +88,27 @@ export async function updateUserProfile(userId: number, userData) {
   }
 }
 
+export async function getUserPets(userId: number) {
+  try {
+    const userPets = await (
+      await User.findByPk(userId, {
+        include: [{ model: Pet, where: { state: true } }],
+      })
+    ).get("pets");
+
+    if (userPets) {
+      return userPets;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.error(error);
+    return { error };
+  }
+}
+
+
+// NO LO USO. CHEQUEAR Y SACAR
 export async function createUser(userId, userData) {
   const { fullName, bio, pictureURL } = userData;
 

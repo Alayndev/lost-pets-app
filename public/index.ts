@@ -1,10 +1,15 @@
 // Components
 import "./components/header";
 import "./components/pet-card";
+import "./components/button";
+import "./components/text";
 
 // Pages
 import "./pages/home/home";
-import "./pages/signin";
+import "./pages/login/login";
+import "./pages/user-data/user-data";
+import "./pages/user-pets/user-pets";
+import "./pages/pet-data/pet-data";
 
 // Router
 import "./router";

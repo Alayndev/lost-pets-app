@@ -11,10 +11,31 @@
 .content-page__text {
   text-align: center;
 }
+
 .show-found-pets {
   display: none;
-  height: 100%;
+
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+@media (min-width: 768px) {
+  .show-found-pets {
+    height: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  .card-container {
+    display: flex;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    max-width: 600px;
+    justify-content: center;
+  }
+}
+
+.found-pets {
+  text-align: center;
 }

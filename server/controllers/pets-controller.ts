@@ -67,26 +67,6 @@ export async function updatePet(petData, pictureURL, petId: number) {
   }
 }
 
-// DUDA: Pets-controller.ts --> getUserPets: DEBERÍA IR EN users-controller.ts? Ya que son los Pets de un user en particular. O está bien acá xq hacemos la llamada a la table Pets?
-export async function getUserPets(userId: number) {
-  try {
-    const userPets = await Pet.findAll({
-      where: { userId: userId, state: true },
-
-      include: [User], // JOIN - "pet"."userId" = "user"."id"
-    });
-
-    if (userPets) {
-      return { userPets };
-    } else {
-      return [];
-    }
-  } catch (error) {
-    console.error(error);
-    return { error };
-  }
-}
-
 export async function findOnePet(petId: number) {
   try {
     const petFound = await Pet.findOne({ where: { id: petId, state: true } });

@@ -50,7 +50,7 @@ export async function createToken(email, password) {
     } else {
       const token = jwt.sign({ id: userFound.get("userId") }, SECRET_TEXT);
 
-      return { token, userFound };
+      return { token };
     }
   } catch (error) {
     console.error(error);

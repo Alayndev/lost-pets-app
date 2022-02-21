@@ -6,6 +6,7 @@
     "sync": "ts-node ./server/sync.ts",
     "dev:api": "nodemon --watch ./server/index.ts --exec ts-node ./server/index.ts",
     "dev:front": "parcel serve ./public/index.html",
+    "dev": "yarn build:front && yarn dev:api",
     "build:api": "tsc",
     "build:front": "parcel build ./public/index.html",
     "build": "npm run build:api && npm run build:front",
@@ -23,11 +24,15 @@
     "dropzone": "^5.9.3",
     "express": "^4.17.2",
     "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
+    "mapbox": "^1.0.0-beta10",
+    "mapbox-gl": "^2.7.0",
     "nodemon": "^2.0.15",
     "parcel": "^2.0.0-rc.0",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.12.5",
+    "sweetalert2": "^11.4.0",
     "typescript": "^4.5.2"
   },
   "devDependencies": {

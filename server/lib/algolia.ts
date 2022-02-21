@@ -9,6 +9,8 @@ export async function createPetAlgolia(pet) {
     const petCreated = await index.saveObject({
       objectID: pet.get("id"),
       fullName: pet.get("fullName"),
+      pictureURL: pet.get("pictureURL"),
+      description: pet.get("description"),
       _geoloc: {
         lat: pet.get("lat"),
         lng: pet.get("lng"),

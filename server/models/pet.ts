@@ -13,12 +13,12 @@ Pet.init(
     },
 
     lat: {
-      type: DataTypes.STRING, // Quizá deba ser un FLOAT para consumirlo desde el Front más comodamente, Algolia lo convierte en string para hacer _geosearch
+      type: DataTypes.FLOAT,
       allowNull: false,
     },
 
     lng: {
-      type: DataTypes.STRING,
+      type: DataTypes.FLOAT,
       allowNull: false,
     },
 
