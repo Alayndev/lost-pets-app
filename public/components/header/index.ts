@@ -9,16 +9,30 @@ class HeaderComp extends HTMLElement {
   }
 
   addListeners() {
-    const signInButton = this.querySelector(".singin");
-    console.log(signInButton);
-
-    signInButton.addEventListener("click", () => {
-      Router.go("/signin");
+    const logInButton = this.querySelector(".log-in");
+    logInButton.addEventListener("click", () => {
+      Router.go("/login");
     });
-    // const enterGameButton = this.querySelector(".entergame-button");
-    // enterGameButton.addEventListener("click", () => {
-    //   Router.go("/entergame");
-    // });
+
+    const myDataButton = this.querySelector(".me");
+    myDataButton.addEventListener("click", () => {
+      Router.go("/user-data");
+    });
+
+    const myPetsButton = this.querySelector(".my-pets");
+    myPetsButton.addEventListener("click", () => {
+      Router.go("/user-pets");
+    });
+
+    const petDataButton = this.querySelector(".pet-data");
+    petDataButton.addEventListener("click", () => {
+      Router.go("/pet-data");
+    });
+
+    const footprintButton = this.querySelector(".logo");
+    footprintButton.addEventListener("click", () => {
+      Router.go("/");
+    });
   }
 
   render() {
@@ -26,7 +40,7 @@ class HeaderComp extends HTMLElement {
     <nav class="navbar navbar-expand-md navbar-light bg-light">
       <div class="container-fluid">
 
-        <img class="navbar-brand" src="${footprint}"> </img>
+        <img class="navbar-brand logo" src="${footprint}"> </img>
         
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -37,23 +51,20 @@ class HeaderComp extends HTMLElement {
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           
             <li class="nav-item">
-              <button type="button" class="btn btn-outline-dark me"> Me </button>
+              <button type="button" class="btn btn-outline-dark me"> Mis datos </button>
             </li>
 
             <li class="nav-item">
-              <button type="button" class="btn btn-outline-dark">  My Reported Pets </button>
+              <button type="button" class="btn btn-outline-dark my-pets">  Mis mascotas reportadas </button>
             </li>
 
             <li class="nav-item">
-              <button type="button" class="btn btn-outline-dark"> Report a pet </button>
+              <button type="button" class="btn btn-outline-dark pet-data"> Reportar mascota </button>
             </li>
+          
 
             <li class="nav-item">
-              <button type="button" class="btn btn-outline-dark signin"> Log in </button>
-            </li>
-
-            <li class="nav-item">
-              <button type="button" class="btn btn-outline-info"> Sign up </button>
+              <button type="button" class="btn btn-outline-info log-in"> Iniciar sesión </button>
             </li>
 
           
@@ -62,6 +73,8 @@ class HeaderComp extends HTMLElement {
       </div>
     </nav>
     `;
+
+    this.addListeners();
   }
 }
 

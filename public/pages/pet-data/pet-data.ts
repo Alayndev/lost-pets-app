@@ -7,6 +7,13 @@ const missingImg = require("url:../../images/no-img.png");
 
 class PetData extends HTMLElement {
   async connectedCallback() {
+    const { token } = state.getState().user;
+
+    if (!token) {
+      return Router.go("/login");
+    } 
+      
+
     const { petData } = state.getState();
     console.log(petData, "petData antes del if");
 
