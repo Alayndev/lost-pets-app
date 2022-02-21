@@ -358,7 +358,7 @@ app.post("/pets/reports", authMiddleware, async (req, res) => {
     const reportCreated = await createPetReport(petId, id, req.body);
 
     if (reportCreated.error) {
-      return res.status(400).json({ error: reportCreated.error }); // Para que no manden el mismo report muchos users
+      return res.status(200).json({ error: reportCreated.error }); // Para que no manden el mismo report muchos users
     } else {
       const petAndOwner = await getPetAndOwner(petId);
 

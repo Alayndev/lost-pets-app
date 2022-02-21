@@ -123,8 +123,11 @@ const state = {
 
   async sendReport(report) {
     const cs = this.getState();
-    return await (
-      await fetch(`${API_URL}/pets/report?petId=${report.petId}`, {
+
+    console.log(report, "report en state 127");
+
+    const res = await (
+      await fetch(`${API_URL}/pets/reports?petId=${report.petId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -133,6 +136,10 @@ const state = {
         body: JSON.stringify(report),
       })
     ).json();
+
+    console.log(res, "res en state 140");
+    
+    return res;
   },
 
   async getReports() {

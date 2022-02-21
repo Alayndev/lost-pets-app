@@ -53,9 +53,10 @@ class HomePage extends HTMLElement {
     }
   }
 
+  // MODAL - APARECE AL FINAL - HACERLO CON MODAL BOOTSTRAP UNA VEZ QUE FUNCIONE
   reportPet(pet) {
-    // MODAL - APARECE AL FINAL - HACERLO CON MODAL BOOTSTRAP UNA VEZ QUE FUNCIONE
     console.log(pet, "estas logeado");
+
     const div = document.createElement("div");
     div.innerHTML = `
 
@@ -91,19 +92,28 @@ class HomePage extends HTMLElement {
     form
       .querySelector("x-button")
       .addEventListener("buttonClicked", async (e: any) => {
+        console.log("escucha el custom event"); // Si no lo escucha, ver como es en otras pages--> user-pets.ts --> addListener(container)
+
         const report = {
           petId: pet.id,
           petName: pet.name,
-          name: form.name.value,
-          tel: form.tel.value,
+          fullName: form.name.value,
+          phoneNumber: form.tel.value,
           report: form.report.value,
         };
+
         try {
-          const reportSended = await state.sendReport(report); // ACA
-          if (reportSended) {
+          const reportSent = await state.sendReport(report); // ACA - Hecho
+          console.log(reportSent);
+
+          if (reportSent.error) {
+            Swal.fire({
+              text: `${reportSent.error}. ${report.fullName}, agredecemos la información que intenta brindar acerca de ${report.petName}, pero la misma ya ha sido reportada.`,
+            });
+          } else {
             Swal.fire({
               icon: "success",
-              text: `${report.name}, muchas gracias por reportar información de ${report.petName}. Se le envió un mail a quien lo busca para que sepa lo que nos contaste.`,
+              text: `${report.fullName}, muchas gracias por reportar información acerca de ${report.petName}. Se le envió un mail al dueñx con la información brindada, quizá sea contactado al teléfono brindado o puede contactar al dueñx vía email. Email del dueñx: ${reportSent.petAndOwner.user.email}.`,
             });
             div.remove();
           }

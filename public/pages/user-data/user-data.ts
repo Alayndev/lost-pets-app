@@ -15,7 +15,8 @@ class UserData extends HTMLElement {
   render(userData?) {
     this.innerHTML = `
       <div class="my-data">
-      <x-navbar></x-navbar>
+      <x-header-comp> </x-header-comp>
+
       <form class="login">
         <x-text type="title" style="bold">Mis datos</x-text>
 
