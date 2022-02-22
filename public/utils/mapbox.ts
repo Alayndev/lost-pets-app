@@ -6,9 +6,8 @@ import { Marker } from "mapbox-gl";
 import { state } from "../state";
 
 // Repasar cap. 5 Desafio - Boilerplate gist
-// ACA - Env Var
-const TOKEN =
-  "pk.eyJ1IjoiYWxheW5kZXYiLCJhIjoiY2t6c3J1OWRuM3VzMTJvcXI1bWlqeXh2ciJ9.DmF6gsJAMsSyaFkLWatPfA";
+
+const TOKEN = process.env.MAPBOX_TOKEN;
 
 export async function mapping(initial?) {
   const form: any = document.querySelector(".pet-data"); // Puedo selecionarlo al NO tener shadow root en la page/comp pet-data.ts
