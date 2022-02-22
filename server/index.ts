@@ -24,7 +24,19 @@ import {
 import { createPetReport, userReports } from "./controllers/reports-controller";
 
 // Middlewares
-import { authMiddleware, hashPassword } from "./middlewares";
+import {
+  authMiddleware,
+  hashPassword,
+  checkEmail,
+  checkEmailAndPassword,
+  checkEmailOrFullName,
+  createPetChecker,
+  checkPetId,
+  updatePetChecker,
+  checkDataURL,
+  checkLatLng,
+  checkReportData,
+} from "./middlewares";
 
 // Lib
 import {
@@ -46,20 +58,11 @@ app.use(cors());
 test();
 
 //--------------------------------- ENDPOINTS: ----------------------------------//
-// CREAR MIDDLEWARES PARA DIF. CHEQUEOS DE BODY (emailAndPasswordBodyCheck - emailBodyCheck - etc.)
 
 // ----------------- AUTH SYSTEM:
-app.get("/users/registered", async (req, res) => {
-  const { email }: { email: string } = req.query;
-
-  if (!email) {
-    return res.status(400).json({
-      message: "Bad Request! You should include values for the columns email",
-    });
-  }
-
+app.get("/users/registered", checkEmail, async (req, res) => {
   try {
-    const exist = await userRegistered(email);
+    const exist = await userRegistered(req.query.email);
 
     res.status(200).json({ exist });
   } catch (err) {
@@ -67,16 +70,7 @@ app.get("/users/registered", async (req, res) => {
   }
 });
 
-app.post("/auth", hashPassword, async (req, res) => {
-  const { email, password }: { email: string; password: string } = req.body;
-
-  if (!email || !password) {
-    return res.status(400).json({
-      message:
-        "Bad Request! You should include values for the columns email and password",
-    });
-  }
-
+app.post("/auth", checkEmailAndPassword, hashPassword, async (req, res) => {
   try {
     const { user, userCreated } = await userSignUp(req.body);
 
@@ -84,7 +78,7 @@ app.post("/auth", hashPassword, async (req, res) => {
     if (userCreated) {
       const { auth, authCreated } = await authSignUp(user, req._hashPassword);
 
-      return res.status(201).json({ user, userCreated, auth, authCreated });
+      return res.status(201).json({ user, userCreated, authCreated });
     }
 
     res.status(201).json({ user, userCreated });
@@ -93,38 +87,29 @@ app.post("/auth", hashPassword, async (req, res) => {
   }
 });
 
-app.post("/auth/token", hashPassword, async (req, res) => {
-  const { email, password }: { email: string; password: string } = req.body;
+app.post(
+  "/auth/token",
+  checkEmailAndPassword,
+  hashPassword,
+  async (req, res) => {
+    const { email } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({
-      message:
-        "Bad Request! You should include values for the columns email and password",
-    });
-  }
+    try {
+      const token = await createToken(email, req._hashPassword);
 
-  try {
-    const token = await createToken(email, req._hashPassword);
+      if (token.error) {
+        return res.status(400).json({ error: token.error });
+      }
 
-    if (token.error) {
-      return res.status(400).json({ error: token.error });
+      res.status(200).json({ token });
+    } catch (err) {
+      res.status(400).json({ err });
     }
-
-    res.status(200).json({ token });
-  } catch (err) {
-    res.status(400).json({ err });
   }
-});
+);
 
 app.get("/users/profile", authMiddleware, async (req, res) => {
   const { id } = req._user;
-
-  if (!id) {
-    return res.status(400).json({
-      message:
-        "This enpoint needs: id - Probably authMiddleware() failed OR the token did not have an id inside, check the endpoint POST /auth/token",
-    });
-  }
 
   try {
     const userProfile = await getUserProfile(id);
@@ -136,64 +121,37 @@ app.get("/users/profile", authMiddleware, async (req, res) => {
 });
 
 // DUDA: No debería actualizar el email en table Auth también? De no hacer update en Auth, además de tener los emails desincronizados, al crear el token debemos pasarle el email viejo, o es que ya está creado y no importa?
-app.patch("/users/profile", authMiddleware, async (req, res) => {
-  const { id } = req._user;
+app.patch(
+  "/users/profile",
+  checkEmailOrFullName,
+  authMiddleware,
+  async (req, res) => {
+    const { id } = req._user;
 
-  const { email, fullName }: { email: string; fullName: string } = req.body;
+    try {
+      const usersUpdated = await updateUserProfile(id, req.body);
 
-  if (!email && !fullName) {
-    return res.status(400).json({
-      message:
-        "Bad Request! You should include values for the columns email or fullName (both or one of them)",
-    });
+      // if (email) {
+      //   const authUpdated = await updateUserRecord(id, req.body);
+
+      //   return res.status(200).json({ usersUpdated, authUpdated, userWhoWasUpdated: id });
+      // }
+
+      res.status(200).json({ usersUpdated, userWhoWasUpdated: id });
+    } catch (err) {
+      res.status(400).json({ err });
+    }
   }
-
-  if (!id) {
-    return res.status(400).json({
-      message:
-        "This enpoint needs: id - Probably authMiddleware() failed OR the token did not have an id inside, check the endpoint POST /auth/token",
-    });
-  }
-
-  try {
-    // DUDA: No debería actualizar el email en table Auth también?
-    const usersUpdated = await updateUserProfile(id, req.body);
-
-    // if (email) {
-    //   const authUpdated = await updateUserRecord(id, req.body);
-
-    //   return res.status(200).json({ usersUpdated, authUpdated, userWhoWasUpdated: id });
-    // }
-
-    res.status(200).json({ usersUpdated, userWhoWasUpdated: id });
-  } catch (err) {
-    res.status(400).json({ err });
-  }
-});
+);
 
 // ----------------- PETS:
 
 // POST /me/pets
-app.post("/users/pets", authMiddleware, async (req, res) => {
+app.post("/users/pets", createPetChecker, authMiddleware, async (req, res) => {
   const { id } = req._user;
-  const { fullName, lat, lng, dataURL } = req.body;
-
-  if (!id) {
-    return res.status(400).json({
-      message:
-        "This enpoint needs: id - Probably authMiddleware() failed OR the token did not have an id inside, check the endpoint POST /auth/token",
-    });
-  }
-
-  if (!fullName && !lat && !lng && !dataURL) {
-    return res.status(400).json({
-      message:
-        "Bad Request! You should include values for: fullName - lat - lng - dataURL",
-    });
-  }
 
   try {
-    const pictureURL = await uploadPictureCloudinary(dataURL);
+    const pictureURL = await uploadPictureCloudinary(req.body.dataURL);
 
     const { pet, petCreated } = await createPet(id, req.body, pictureURL);
 
@@ -210,58 +168,35 @@ app.post("/users/pets", authMiddleware, async (req, res) => {
 });
 
 // DUDA: No debería ser PATCH /pets ? No uso token
-// TIP: Estaría bueno que dataURL no sea obligatorio, sino opcional
-app.patch("/users/pets", async (req, res) => {
-  const { fullName, lat, lng, description, dataURL } = req.body;
-  const { petId } = req.query;
+app.patch(
+  "/users/pets",
+  checkPetId,
+  updatePetChecker,
+  checkDataURL,
+  async (req, res) => {
+    const { petId } = req.query;
 
-  // Middleware - tmb en GET /pets
-  if (!petId) {
-    return res.status(400).json({ error: "Missing petId query" });
-  }
+    try {
+      const pictureURL = await uploadPictureCloudinary(req.body.dataURL);
 
-  // Make it a middleware - Cuando dataURL no sea obligatorio, incluirlo en el middleware - Para chequear que me pasan algo para actualizar, sino no tiene sentido hacer las llamadas async
-  if (!fullName && !lat && !lng && !description) {
-    return res
-      .status(400)
-      .json({ error: "The client did not send any information to update" });
-  }
+      const petUpdated = await updatePet(req.body, pictureURL, petId);
 
-  // Xq sino falla uploadPictureCloudinary() - No se me ocurre otra solución por el momento
-  if (!dataURL) {
-    return res.status(400).json({
-      message:
-        "This enpoint needs: dataURL. Make sure to add it inside the body request",
-    });
-  }
+      if (petUpdated.error) {
+        return res.status(404).json({ error: petUpdated.error });
+      } else {
+        const algoliaPetUpdated = await updatePetAlgolia(petUpdated);
 
-  try {
-    const pictureURL = await uploadPictureCloudinary(dataURL);
-
-    const petUpdated = await updatePet(req.body, pictureURL, petId);
-
-    if (petUpdated.error) {
-      return res.status(404).json({ error: petUpdated.error });
-    } else {
-      const algoliaPetUpdated = await updatePetAlgolia(petUpdated);
-
-      return res.status(201).json({ petUpdated, algoliaPetUpdated });
+        return res.status(201).json({ petUpdated, algoliaPetUpdated });
+      }
+    } catch (error) {
+      res.status(400).json({ error });
     }
-  } catch (error) {
-    res.status(400).json({ error });
   }
-});
+);
 
 // GET /me/pets
 app.get("/users/pets", authMiddleware, async (req, res) => {
   const { id } = req._user;
-
-  if (!id) {
-    return res.status(400).json({
-      message:
-        "This enpoint needs: id - Probably authMiddleware() failed OR the token did not have an id inside, check the endpoint POST /auth/token",
-    });
-  }
 
   try {
     const userPets = await getUserPets(id);
@@ -272,16 +207,8 @@ app.get("/users/pets", authMiddleware, async (req, res) => {
   }
 });
 
-app.get("/pets/around", async (req, res) => {
+app.get("/pets/around", checkLatLng, async (req, res) => {
   const { lat, lng } = req.query;
-
-  // Middleware
-  if (!lat || !lng) {
-    return res.status(400).json({
-      message:
-        "Bad Request! You should include values for the columns lat and lng",
-    });
-  }
 
   try {
     const petsAround = await searchPetsAround(lat, lng);
@@ -292,13 +219,8 @@ app.get("/pets/around", async (req, res) => {
   }
 });
 
-app.get("/pets", async (req, res) => {
+app.get("/pets", checkPetId, async (req, res) => {
   const { petId } = req.query;
-
-  // Middleware
-  if (!petId) {
-    return res.status(400).json({ error: "Missing petId query" });
-  }
 
   try {
     const petFound = await findOnePet(petId);
@@ -313,13 +235,8 @@ app.get("/pets", async (req, res) => {
   }
 });
 
-app.delete("/pets", async (req, res) => {
+app.delete("/pets", checkPetId, async (req, res) => {
   const { petId } = req.query;
-
-  // Middleware
-  if (!petId) {
-    return res.status(400).json({ error: "Missing petId query" });
-  }
 
   try {
     const petdeleted = await deletePet(petId);
@@ -338,56 +255,41 @@ app.delete("/pets", async (req, res) => {
   }
 });
 
-app.post("/pets/reports", authMiddleware, async (req, res) => {
-  const { petId } = req.query;
-  const { id } = req._user;
-  const { fullName, phoneNumber, report } = req.body;
+app.post(
+  "/pets/reports",
+  checkPetId,
+  checkReportData,
+  authMiddleware,
+  async (req, res) => {
+    const { petId } = req.query;
+    const { id } = req._user;
 
-  // Middleware
-  if (!petId) {
-    return res.status(400).json({ error: "Missing petId query" });
-  }
+    try {
+      const reportCreated = await createPetReport(petId, id, req.body);
 
-  // Middleware para req.body - Obligatorio fullName - phoneNumber - report
-  if (!fullName || !phoneNumber || !report) {
-    return res.status(400).json({
-      message:
-        "Bad Request! You should include values for the columns fullName - email - report",
-    });
-  }
+      if (reportCreated.error) {
+        return res.status(200).json({ error: reportCreated.error }); // Para que no manden el mismo report muchos users
+      } else {
+        const petAndOwner = await getPetAndOwner(petId);
 
-  try {
-    const reportCreated = await createPetReport(petId, id, req.body);
+        // sendgrid
+        const sentEmail = await sendEmail(
+          petAndOwner.getDataValue("user").email, // owner - email del dueño de la mascota
+          reportCreated.reportRecord.getDataValue("phoneNumber"), // phoneNumber de quien reporta
+          petAndOwner.getDataValue("fullName"), // petName
+          reportCreated.reportRecord.getDataValue("report") // reporte
+        );
 
-    if (reportCreated.error) {
-      return res.status(200).json({ error: reportCreated.error }); // Para que no manden el mismo report muchos users
-    } else {
-      const petAndOwner = await getPetAndOwner(petId);
-
-      // sendgrid
-      const sentEmail = await sendEmail(
-        petAndOwner.getDataValue("user").email, // owner - email del dueño de la mascota
-        reportCreated.reportRecord.getDataValue("phoneNumber"), // phoneNumber de quien reporta
-        petAndOwner.getDataValue("fullName"), // petName
-        reportCreated.reportRecord.getDataValue("report") // reporte
-      );
-
-      res.status(201).json({ reportCreated, petAndOwner, sentEmail });
+        res.status(201).json({ reportCreated, petAndOwner, sentEmail });
+      }
+    } catch (error) {
+      res.status(400).json({ error });
     }
-  } catch (error) {
-    res.status(400).json({ error });
   }
-});
+);
 
 app.get("/users/reports", authMiddleware, async (req, res) => {
   const { id } = req._user;
-
-  if (!id) {
-    return res.status(400).json({
-      message:
-        "This enpoint needs: id - Probably authMiddleware() failed OR the token did not have an id inside, check the endpoint POST /auth/token",
-    });
-  }
 
   try {
     const reports = await userReports(id);
