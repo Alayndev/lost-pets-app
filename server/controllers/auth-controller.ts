@@ -2,7 +2,7 @@ import { Auth } from "../models";
 
 import * as jwt from "jsonwebtoken";
 
-const SECRET_TEXT = "asdfghjklñpoiuytre"; // ENV VAR
+import "dotenv/config";
 
 export async function authSignUp(user, password) {
   if (!user || !password) {
@@ -48,7 +48,10 @@ export async function createToken(email, password) {
         "User not Found! Email or Password incorrect, auth-controller.ts - createToken()";
       return { error };
     } else {
-      const token = jwt.sign({ id: userFound.get("userId") }, SECRET_TEXT);
+      const token = jwt.sign(
+        { id: userFound.get("userId") },
+        process.env.SECRET_TEXT
+      );
 
       return { token };
     }

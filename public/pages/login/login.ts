@@ -2,7 +2,8 @@ import { Router } from "@vaadin/router";
 import { state } from "../../state";
 import Swal from "sweetalert2";
 
-// Problema: Al no ingresar la contraseña ingresada NO le informamos nada al usuario. Informarle, solo llega un 400 Bad request en la consola de la dev tools
+// ACA
+// Problema: Al ingresar una contraseña erronea NO le informamos nada al usuario. Informarle, solo llega un 400 Bad request en la consola de la dev tools
 class Login extends HTMLElement {
   connectedCallback() {
     this.render();
@@ -65,12 +66,14 @@ class Login extends HTMLElement {
       .addEventListener("buttonClicked", async (e: any) => {
         e.preventDefault();
         const userData = { email, password: form.password.value };
-        // Hecho - /auth - /auth/token
+        // ACA - Hecho - /auth - /auth/token
+        // ACA - AGREGAR IF
         await state.createOrFindUser(userData).then((res) => {
           Swal.fire({
             icon: "success",
             title: "Bienvenidx!",
           });
+          
           Router.go("/user-data");
         });
       });

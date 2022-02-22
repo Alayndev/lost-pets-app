@@ -3,6 +3,8 @@ import * as express from "express";
 import * as cors from "cors";
 import * as path from "path";
 
+import "dotenv/config";
+
 // Controllers
 import {
   userRegistered,

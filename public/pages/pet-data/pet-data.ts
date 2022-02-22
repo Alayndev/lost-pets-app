@@ -11,8 +11,7 @@ class PetData extends HTMLElement {
 
     if (!token) {
       return Router.go("/login");
-    } 
-      
+    }
 
     const { petData } = state.getState();
     console.log(petData, "petData antes del if");
@@ -45,7 +44,7 @@ class PetData extends HTMLElement {
 
         <label class="label">
         <span>NOMBRE</span>
-        <input type="text" name="name" class="is-success"  >
+        <input type="text" name="name" class="is-success" />
         </label>
 
         <label class="label" id="img">
@@ -71,9 +70,10 @@ class PetData extends HTMLElement {
     const petDataForm: any = this.querySelector(".pet-data");
     const buttonImg = this.querySelector("#buttonImg");
 
+    // ACA - HAY UN PROBLEMA - ANTES FUNCIONABA BIEN, LO UNICO QUE CAMBIE FUE LINEA 12 A 15, ESE IF
     if (pet) {
       //inserta los datos de la mascota en el formulario
-      petDataForm.name.value = pet.fullName;
+      //petDataForm.name.value = pet.fullName;
       pic.setAttribute("src", pet.pictureURL);
       petDataForm.geoloc.value = `${pet.lat},${pet.lng}`;
     }

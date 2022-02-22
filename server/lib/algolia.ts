@@ -1,6 +1,10 @@
 import algoliasearch from "algoliasearch";
+import "dotenv/config";
 
-const client = algoliasearch("N5ZS06PQ7W", "df4e5a603df38d73860f180647020788"); // Env vars
+const client = algoliasearch(
+  process.env.ALGOLIA_CLIENT,
+  process.env.ALGOLIA_KEY
+);
 
 const index = client.initIndex("pets");
 

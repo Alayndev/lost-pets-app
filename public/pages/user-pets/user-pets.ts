@@ -43,7 +43,7 @@ class UserPets extends HTMLElement {
       
       <div>
       <x-header-comp> </x-header-comp>
-
+      
       <x-text type="title" style="bold">Mis mascotas reportadas</x-text>
       <div class="pets-container">
         ${

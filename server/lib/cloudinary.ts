@@ -1,10 +1,10 @@
 const cloudinary = require("cloudinary").v2;
+import "dotenv/config";
 
-// Env vars
 cloudinary.config({
-  cloud_name: "daxkw95yw",
-  api_key: "797863183635941",
-  api_secret: "1Dj1yGfH0PIyd3cnAJwhgH9QIKY",
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 // Recibe dataURL - devuelve URL

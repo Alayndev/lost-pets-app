@@ -2,7 +2,7 @@ import * as crypto from "crypto";
 
 import * as jwt from "jsonwebtoken";
 
-const SECRET_TEXT = "asdfghjklñpoiuytre"; // ENV VAR
+import "dotenv/config";
 
 export function hashPassword(req, res, next) {
   const { password }: { password: string } = req.body;
@@ -30,7 +30,7 @@ export function authMiddleware(req, res, next) {
   try {
     const token = authHeader.split(" ")[1];
 
-    const tokenJSON = jwt.verify(token, SECRET_TEXT);
+    const tokenJSON = jwt.verify(token, process.env.SECRET_TEXT);
 
     req._user = tokenJSON;
 
