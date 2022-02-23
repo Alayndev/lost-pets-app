@@ -301,7 +301,10 @@ app.get("/users/reports", authMiddleware, async (req, res) => {
 });
 
 //---------------------------------- Servir el Front: ----------------------------------//
-const staticDirPath = path.resolve(__dirname, "../../dist");
+const dir = process.env.NODE_ENV === "development" ? "../dist" : "../../dist";
+console.log(dir);
+
+const staticDirPath = path.resolve(__dirname, dir);
 
 app.use(express.static(staticDirPath));
 
