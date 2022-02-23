@@ -10,7 +10,7 @@
     "build:api": "tsc",
     "build:front": "parcel build ./public/index.html",
     "build": "npm run build:api && npm run build:front",
-    "start": "node ./server-dist/index.js"
+    "start": "node ./server-dist/server/index.js"
   },
   "dependencies": {
     "@sendgrid/mail": "^7.6.0",
