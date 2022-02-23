@@ -41,7 +41,7 @@ export async function updatePetAlgolia(pet) {
   }
 }
 
-export async function searchPetsAround(lat, lng) {
+export async function searchPetsAround(lat: number, lng: number) {
   const { hits, nbHits } = await index.search("", {
     aroundLatLng: [lat, lng].join(","),
 

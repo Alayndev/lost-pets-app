@@ -1,6 +1,6 @@
 import { User, Report } from "../models";
 
-export async function createPetReport(petId: number, userId: number, petData) {
+export async function createPetReport(petId: number, userId: number, petData: { fullName: string, phoneNumber: number, report: string, lat: number, lng: number }) {
   const { fullName, phoneNumber, report, lat, lng } = petData;
 
   const [reportRecord, reportCreated] = await Report.findOrCreate({
@@ -25,7 +25,7 @@ export async function createPetReport(petId: number, userId: number, petData) {
   }
 }
 
-export async function userReports(userId) {
+export async function userReports(userId: number) {
   const userReports = await (
     await User.findByPk(userId, { include: [Report] })
   ).get("reports");

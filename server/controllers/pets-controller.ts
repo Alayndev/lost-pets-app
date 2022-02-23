@@ -1,7 +1,11 @@
 import { User, Pet } from "../models"; // Controller invocan a capa Model
 import { bodyToIndexAlgolia } from "../middlewares";
 
-export async function createPet(userId: number, petData, pictureURL) {
+export async function createPet(
+  userId: number,
+  petData: { fullName: string; lat: number; lng: number; description: string },
+  pictureURL: string
+) {
   const { fullName, lat, lng, description } = petData;
 
   if (!petData || !userId) {
@@ -39,7 +43,11 @@ export async function createPet(userId: number, petData, pictureURL) {
   }
 }
 
-export async function updatePet(petData, pictureURL, petId: number) {
+export async function updatePet(
+  petData: { fullName: string; lat: number; lng: number; description: string },
+  pictureURL: string,
+  petId: number
+) {
   const { fullName, lat, lng, description } = petData;
 
   if (!petData || !petId) {
@@ -83,7 +91,7 @@ export async function findOnePet(petId: number) {
   }
 }
 
-export async function deletePet(petId) {
+export async function deletePet(petId: number) {
   try {
     const petsDeleted = await Pet.update(
       { state: false },
@@ -102,7 +110,7 @@ export async function deletePet(petId) {
   }
 }
 
-export async function getPetAndOwner(petId) {
+export async function getPetAndOwner(petId: number) {
   const petAndOwner = await Pet.findByPk(petId, { include: [User] });
   return petAndOwner;
 }

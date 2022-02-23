@@ -23,11 +23,11 @@ Report.init(
     },
 
     lat: {
-      type: DataTypes.STRING,
+      type: DataTypes.FLOAT,
     },
 
     lng: {
-      type: DataTypes.STRING,
+      type: DataTypes.FLOAT,
     },
   },
   {

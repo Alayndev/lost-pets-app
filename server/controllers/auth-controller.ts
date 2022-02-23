@@ -4,7 +4,7 @@ import * as jwt from "jsonwebtoken";
 
 import "dotenv/config";
 
-export async function authSignUp(user, password) {
+export async function authSignUp(user, password: string) {
   if (!user || !password) {
     const error = "Controller authSignUp() without user and/or password";
     return { error };
@@ -28,7 +28,7 @@ export async function authSignUp(user, password) {
   }
 }
 
-export async function createToken(email, password) {
+export async function createToken(email: string, password: string) {
   if (!email || !password) {
     const error = "Controller createToken() without email and/or password";
     return { error };
