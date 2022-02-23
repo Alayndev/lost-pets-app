@@ -1,5 +1,10 @@
-//const API_URL = "http://localhost:3000";
-const API_URL = "https://lost-pet-finder-app.herokuapp.com";
+const API_URL =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:3000"
+    : "https://lost-pet-finder-app.herokuapp.com";
+console.log(API_URL);
+
+//const API_URL = "https://lost-pet-finder-app.herokuapp.com";
 
 const state = {
   data: {
@@ -138,7 +143,7 @@ const state = {
     ).json();
 
     console.log(res, "res en state 140");
-    
+
     return res;
   },
 
