@@ -2,9 +2,9 @@ const API_URL =
   process.env.NODE_ENV === "development"
     ? "http://localhost:3000"
     : "https://lost-pet-finder-app.herokuapp.com";
-console.log(API_URL);
 
-//const API_URL = "http://localhost:3000";
+// const API_URL = "http://localhost:3000";
+console.log(API_URL);
 
 const state = {
   data: {
@@ -40,7 +40,12 @@ const state = {
 
   async getPetsAround() {
     const { lat, lng } = this.getState()._geoloc;
-    return await fetch(`${API_URL}/pets/around?lat=${lat}&lng=${lng}`);
+    return await fetch(`${API_URL}/pets/around?lat=${lat}&lng=${lng}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   },
 
   // fullName? opcional xq lo uso en login.ts page para que encuentre al user. Obligatorio en user-data.ts page
@@ -116,7 +121,12 @@ const state = {
 
   async checkMail(email: string) {
     return await (
-      await fetch(API_URL + "/users/registered?email=" + email)
+      await fetch(API_URL + "/users/registered?email=" + email, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
     ).json();
   },
 

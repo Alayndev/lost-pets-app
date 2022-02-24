@@ -146,7 +146,6 @@ app.patch(
 
 // ----------------- PETS:
 
-// POST /me/pets
 app.post("/users/pets", createPetChecker, authMiddleware, async (req, res) => {
   const { id } = req._user;
 
@@ -194,7 +193,6 @@ app.patch(
   }
 );
 
-// GET /me/pets
 app.get("/users/pets", authMiddleware, async (req, res) => {
   const { id } = req._user;
 
