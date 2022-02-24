@@ -14,7 +14,9 @@ class UserData extends HTMLElement {
     }
   }
   render(userData?) {
-    const type = userData.token ? "Editá tu información personal. No es necesario que edites tu información personal para poder reportar, ya podés hacerlo." : "Guardá tu información personal, una vez resgitrado podrás reportar.";
+    const type = userData.token
+      ? "Editá tu información personal. No es necesario que edites tu información personal para poder reportar, ya podés hacerlo."
+      : "Guardá tu información personal, una vez resgitrado podrás reportar.";
 
     this.innerHTML = `
       <div class="my-data">
@@ -84,8 +86,6 @@ class UserData extends HTMLElement {
               email,
               password,
             });
-
-            //await state.updateUser({ fullName }); // ACA - ¿Para que el update? No lo necesito xq seteo el fullName con createOrFindUser()
 
             // ACA - AGREGAR IF
             // if(res) {

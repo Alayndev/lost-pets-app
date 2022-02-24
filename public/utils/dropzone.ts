@@ -8,12 +8,10 @@ export async function dropzonedImg(pic, buttonImg) {
     url: "/falsa",
     autoProcessQueue: false,
 
-    // previewTemplate: document.querySelector("#img").innerHTML,
     clickable: true,
     clickeableElements: buttonImg,
 
     thumbnail: function (file, dataUrl) {
-      // Display the image in your file.previewElement
       pic.setAttribute("src", dataUrl); // Le pongo la dataURl en el atributo src de la imagen que le mando a dropzonedImg() desde pet-data.ts
     },
 
