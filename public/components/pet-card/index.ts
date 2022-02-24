@@ -47,7 +47,7 @@ class CardComp extends HTMLElement {
         <ul class="pet-card__links">
           <a class="pet-card__link report">REPORTAR INFORMACIÓN</a>
         </ul>
-        </div>
+      </div>
     </div>
     `;
     this.addStyle();
