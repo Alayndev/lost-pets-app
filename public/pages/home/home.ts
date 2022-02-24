@@ -61,7 +61,7 @@ class HomePage extends HTMLElement {
     div.innerHTML = `
 
     <div class="exit button is-danger">X</div>
-    <x-text type="title" style="bold">Reportar info de ${pet.name}</x-text>
+    <h2>Reportar info de ${pet.name}</h2>
     <form class="report-pet__form">
       <label class="report-pet__label">
         <span>TU NOMBRE</span>
@@ -126,16 +126,16 @@ class HomePage extends HTMLElement {
   render(pets?) {
     if (!pets) {
       this.innerHTML = `
-      <x-header-comp> </x-header-comp>
+    <x-header-comp> </x-header-comp>
 
-      <div>
-      <x-navbar></x-navbar>
-      <div class="welcome">
-      <x-text class="title" type="title" style="bold">Mascotas perdidas cerca tuyo</x-text>
-      <x-text type="subtitle" style="thin">Para ver las mascotas reportadas cerca tuyo necesitamos permiso para conocer tu ubicación.</x-text>
-      <x-button type="primary">Dar mi ubicación</x-button>
+    <div class="main-container">
+      <div class="main-container">
+        <h1 class="title"> Mascotas perdidas cerca tuyo </h1>
+        <p class="text"> Para ver las mascotas reportadas cerca tuyo necesitamos permiso para conocer tu ubicación. </p>
+        
+        <x-button type="btn btn-outline-primary" >Dar mi ubicación</x-button>
       </div>
-    </div>
+     </div>
     `;
       this.addListenerGeoloc();
     }
@@ -154,7 +154,7 @@ class HomePage extends HTMLElement {
       <div>
       <x-navbar></x-navbar>
       <div class="welcome">
-      <x-text type="title" style="bold">Mascotas perdidas cerca tuyo: ${pets.petsAround.nbHits}</x-text>
+      <h1>Mascotas perdidas cerca tuyo: ${pets.petsAround.nbHits}</h1>
       <div class="pets-container">
         ${petsString}
       </div>

@@ -39,11 +39,11 @@ class CardComp extends HTMLElement {
       <img class="pet-card__img card-image" src=${img} crossorigin="anonymous">
 
       <div class="pet-card__body card-content">
-        <x-text type="subtitle" style="bold">${name}</x-text>
+        <p>${name}</p>
 
         <br />
 
-        <x-text type="subtitle" style="bold"> Descripción: ${description}</x-text>
+        <p type="subtitle" style="bold"> Descripción: ${description}</p>
         <ul class="pet-card__links">
           <a class="pet-card__link report">REPORTAR INFORMACIÓN</a>
         </ul>

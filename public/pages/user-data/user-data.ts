@@ -21,9 +21,9 @@ class UserData extends HTMLElement {
       <x-header-comp> </x-header-comp>
 
       <form class="login">
-        <x-text type="title" style="bold">Mis datos</x-text>
+        <h1 type="title" style="bold">Mis datos</h1>
 
-        <x-text type="subtitle" style="bold"> ${type} </x-text>
+        <p type="subtitle" style="bold"> ${type} </p>
 
         <label>
         <span>NOMBRE</span>

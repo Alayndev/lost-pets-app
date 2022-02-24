@@ -301,8 +301,8 @@ app.get("/users/reports", authMiddleware, async (req, res) => {
 });
 
 //---------------------------------- Servir el Front: ----------------------------------//
+// Servir el Front: En modo dev: "../dist" - En production/Heroku:  "../../dist" --> Por ahora con el ternario va bien, pero si falla en alguna es por esto problablemente
 const dir = process.env.NODE_ENV === "development" ? "../dist" : "../../dist";
-console.log(dir);
 
 const staticDirPath = path.resolve(__dirname, dir);
 

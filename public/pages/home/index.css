@@ -1,14 +1,4 @@
-.content-page {
-  height: 100%;
-  padding: 5px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.content-page__title,
-.content-page__text {
+.text {
   text-align: center;
 }
 

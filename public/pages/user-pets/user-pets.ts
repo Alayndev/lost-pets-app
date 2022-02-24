@@ -44,11 +44,11 @@ class UserPets extends HTMLElement {
       <div>
       <x-header-comp> </x-header-comp>
       
-      <x-text type="title" style="bold">Mis mascotas reportadas</x-text>
+      <h1>Mis mascotas reportadas</h1>
       <div class="pets-container">
         ${
           !pets
-            ? `<x-text type="body">AUN NO REPORTASTE MASCOTAS PERDIDAS</x-text>`
+            ? `<h1>AUN NO REPORTASTE MASCOTAS PERDIDAS</h1>`
             : map(pets, (pet) => {
                 return `<x-pet-card img=${pet.pictureURL} petId=${pet.id} petName="${pet.fullName}" description="${pet.description}" > ${pet.fullName} </x-pet-card>`;
               }).join("")
@@ -58,9 +58,8 @@ class UserPets extends HTMLElement {
     `
       : `
     <div>
-      <x-navbar></x-navbar>
-      <x-text type="title" style="bold">Mis mascotas reportadas</x-text>
-      <x-text type="subtitle">Aun no reportaste mascotas perdidas</x-text>
+      <h1 type="title" style="bold">Mis mascotas reportadas</h1>
+      <p type="subtitle">Aun no reportaste mascotas perdidas</p>
     </div>
     `;
 

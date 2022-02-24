@@ -11,3 +11,12 @@ body {
   width: 100%;
   background-color: #fff;
 }
+
+.main-container {
+  height: 100%;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

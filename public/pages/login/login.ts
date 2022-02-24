@@ -11,15 +11,16 @@ class Login extends HTMLElement {
 
   render() {
     this.innerHTML = `
-      <div>
-     <x-header-comp> </x-header-comp>
+    <x-header-comp> </x-header-comp>
+
+    <div class="main-container" >
       <form class="login">
-        <x-text type="title" style="bold">Ingresar</x-text>
+        <h1>Ingresar</h1>
         <label>
         <span>EMAIL</span>
         <input type="email" name="email">
         </label>
-        <x-button type="primary">Siguiente</x-button>
+        <x-button type="btn btn-outline-primary"> Siguiente </x-button>
       </form>
     </div>
     `;
@@ -50,12 +51,12 @@ class Login extends HTMLElement {
     <div>
     <x-header-comp> </x-header-comp>
     <form class="login">
-      <x-text type="title" style="bold">Ingresar</x-text>
+      <h1>Ingresar</h1>
       <label>
       <span>CONTRASEÑA</span>
       <input type="password" name="password">
       </label>
-      <x-button type="primary">Ingresar</x-button>
+      <x-button type="btn btn-outline-primary"> Ingresar </x-button>
     </form>
     </div>
     `;

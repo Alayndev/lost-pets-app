@@ -40,7 +40,7 @@ class PetData extends HTMLElement {
       <x-header-comp> </x-header-comp>
 
       <form class="pet-data card">
-        <x-text type="title" style="bold"> ${type} mascota perdida</x-text>
+        <h1> ${type} mascota perdida</h1>
 
         <label class="label">
         <span>NOMBRE</span>
@@ -54,7 +54,7 @@ class PetData extends HTMLElement {
 
         <label class="label">
           <span>UBICACION</span>
-          <x-text type="body">BUSCÁ UN PUNTO DE REFERENCIA PARA REPORTAR A TU MASCOTA. PUEDE SER UNA DIRECCIÓN, UN BARRIO O UNA CIUDAD</x-text>
+          <p>BUSCÁ UN PUNTO DE REFERENCIA PARA REPORTAR A TU MASCOTA. PUEDE SER UNA DIRECCIÓN, UN BARRIO O UNA CIUDAD</p>
           <div id="map" style="width: 335px; height: 335px"></div>
           <input type="text" name="geoloc" class="search-geoloc">
         </label>
