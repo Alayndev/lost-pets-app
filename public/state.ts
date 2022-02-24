@@ -216,7 +216,6 @@ const state = {
   },
 
   // Agregar description, tambien en page para editar/reportar
-  // PUT /me/pets?petId
   async editPet({ id, fullName, dataURL }) {
     const cs = this.getState();
     const lat = cs.petData.lat; // lat y lng desde page?
@@ -247,7 +246,6 @@ const state = {
   },
 
   // Agregar description
-  // POST /me/pets
   // Cambiar nombre a reportPet()
   async createPet({ fullName, dataURL }) {
     const cs = this.getState();
@@ -280,7 +278,6 @@ const state = {
   },
 
   // Cambiar a petFound()
-  // DELETE /me/pets?petId=
   async findedPet(id) {
     const cs = this.getState();
     const petEdited = await (
