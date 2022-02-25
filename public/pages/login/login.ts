@@ -13,12 +13,12 @@ class Login extends HTMLElement {
     this.innerHTML = `
     <x-header-comp> </x-header-comp>
 
-    <div class="main-container" >
+    <div class="main-container">
       <form class="login">
         <h1>Ingresar</h1>
         <label>
         <span>EMAIL</span>
-        <input type="email" name="email">
+        <input type="email" name="email" required >
         </label>
         <x-button type="btn btn-outline-primary"> Siguiente </x-button>
       </form>
@@ -48,17 +48,19 @@ class Login extends HTMLElement {
   renderPass(email) {
     console.log(email);
     this.innerHTML = `
-    <div>
     <x-header-comp> </x-header-comp>
-    <form class="login">
-      <h1>Ingresar</h1>
-      <label>
-      <span>CONTRASEÑA</span>
-      <input type="password" name="password">
-      </label>
-      <x-button type="btn btn-outline-primary"> Ingresar </x-button>
-    </form>
+
+    <div class="main-container">  
+      <form class="login">
+        <h1>Ingresar</h1>
+        <label>
+        <span>CONTRASEÑA</span>
+        <input type="password" name="password" required>
+        </label>
+        <x-button type="btn btn-outline-primary"> Ingresar </x-button>
+      </form>
     </div>
+
     `;
 
     const form: any = this.querySelector(".login");

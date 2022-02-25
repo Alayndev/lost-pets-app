@@ -5,6 +5,7 @@ import "./index.css";
 
 import { state } from "../../state";
 
+// HACER MODAL - LINEA 57
 class HomePage extends HTMLElement {
   connectedCallback() {
     this.render();
@@ -53,7 +54,7 @@ class HomePage extends HTMLElement {
     }
   }
 
-  // MODAL - APARECE AL FINAL - HACERLO CON MODAL BOOTSTRAP UNA VEZ QUE FUNCIONE
+  // ACA - MODAL - APARECE AL FINAL - HACERLO CON MODAL BOOTSTRAP UNA VEZ QUE FUNCIONE
   reportPet(pet) {
     console.log(pet, "estas logeado");
 
@@ -65,15 +66,15 @@ class HomePage extends HTMLElement {
     <form class="report-pet__form">
       <label class="report-pet__label">
         <span>TU NOMBRE</span>
-        <input  class="report-pet__input input is-large" type="text" name="name">
+        <input  class="report-pet__input input is-large" type="text" name="name" required>
       </label>
       <label class="report-pet__label">
         <span>TU TELEFONO</span>
-        <input  class="report-pet__input input is-large" type="phone" name="tel">
+        <input  class="report-pet__input input is-large" type="phone" name="tel" required>
       </label>
       <label class="report-pet__label">
         <span>¿DÓNDE LO VISTE?</span>
-        <textarea class="report-pet__input textarea" name="report"></textarea>
+        <textarea class="report-pet__input textarea" name="report" required></textarea>
       </label>
       <x-button type="primary">Enviar reporte</x-button>
     </form>
@@ -152,8 +153,7 @@ class HomePage extends HTMLElement {
       <x-header-comp> </x-header-comp>
 
       <div>
-      <x-navbar></x-navbar>
-      <div class="welcome">
+      <div class="welcome main-container">
       <h1>Mascotas perdidas cerca tuyo: ${pets.petsAround.nbHits}</h1>
       <div class="pets-container">
         ${petsString}

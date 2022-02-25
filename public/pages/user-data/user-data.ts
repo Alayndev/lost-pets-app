@@ -2,7 +2,7 @@ import { Router } from "@vaadin/router";
 import { state } from "../../state";
 import Swal from "sweetalert2";
 
-// PROBLEMA: LINEA 61 Y 90
+// PROBLEMA: LINEA 63 Y 90
 class UserData extends HTMLElement {
   connectedCallback() {
     const cs = state.getState();
@@ -19,33 +19,35 @@ class UserData extends HTMLElement {
       : "Guardá tu información personal, una vez resgitrado podrás reportar.";
 
     this.innerHTML = `
-      <div class="my-data">
       <x-header-comp> </x-header-comp>
 
-      <form class="login">
-        <h1 type="title" style="bold">Mis datos</h1>
+      <form class="login main-container">
+        <h1>Mis datos</h1>
 
-        <p type="subtitle" style="bold"> ${type} </p>
+        <p class="subtitle"> ${type} </p>
 
-        <label>
-        <span>NOMBRE</span>
-        <input type="text" name="name" required />
-        </label>
+        <div class="sub-container">
+        
+          <label>
+          <div>NOMBRE</div>
+          <input type="text" name="name" required />
+          </label>
 
 
-        <label>
-        <span>CONTRASEÑA</span>
-        <input type="password" name="password" class="password" required />
-        </label>
+          <label>
+          <div>CONTRASEÑA</div>
+          <input type="password" name="password" class="password" required />
+          </label>
 
-        <label>
-        <span>REPETIR CONTRASEÑA</span>
-        <input type="password" name="repeatedPassword" class="password" required />
-        </label>
+          <label>
+          <div>REPETIR CONTRASEÑA</div>
+          <input type="password" name="repeatedPassword" class="password" required />
+          </label>
+  
+        </div>
 
-        <x-button type="primary"> Guardar </x-button>
+        <x-button type="btn btn-outline-primary"> Guardar </x-button>
       </form>
-    </div>
     `;
 
     const submit = this.querySelector("x-button");

@@ -2,7 +2,7 @@ import { Router } from "@vaadin/router";
 import { state } from "../../state";
 import * as map from "lodash/map";
 
-// PONER LOADER XQ TARDA, MISMA LÓGICA QUE EN dwf-m6
+// ACA - PONER LOADER XQ TARDA, MISMA LÓGICA QUE EN dwf-m6
 class UserPets extends HTMLElement {
   async connectedCallback() {
     const { token } = state.getState().user;
@@ -44,11 +44,11 @@ class UserPets extends HTMLElement {
       <div>
       <x-header-comp> </x-header-comp>
       
-      <h1>Mis mascotas reportadas</h1>
-      <div class="pets-container">
+      <h1 class="title">Mis mascotas reportadas</h1>
+      <div class="pets-container main-container">
         ${
           !pets
-            ? `<h1>AUN NO REPORTASTE MASCOTAS PERDIDAS</h1>`
+            ? `<h1 class="title">AUN NO REPORTASTE MASCOTAS PERDIDAS</h1>`
             : map(pets, (pet) => {
                 return `<x-pet-card img=${pet.pictureURL} petId=${pet.id} petName="${pet.fullName}" description="${pet.description}" > ${pet.fullName} </x-pet-card>`;
               }).join("")
@@ -57,10 +57,13 @@ class UserPets extends HTMLElement {
       </div>
     `
       : `
-    <div>
-      <h1 type="title" style="bold">Mis mascotas reportadas</h1>
-      <p type="subtitle">Aun no reportaste mascotas perdidas</p>
-    </div>
+      <x-header-comp> </x-header-comp>
+      <div class="main-container">
+       <h1 class="title">Mis mascotas reportadas</h1>
+       <p class="subtitle">Aun no reportaste mascotas perdidas</p>
+  
+      </div>
+
     `;
 
     this.addListener(this.querySelectorAll("x-pet-card"));

@@ -20,3 +20,15 @@ body {
   justify-content: center;
   align-items: center;
 }
+
+.sub-container {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 20px;
+}
+
+.title,
+.subtitle {
+  text-align: center;
+}

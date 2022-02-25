@@ -5,6 +5,7 @@ import { dropzonedImg } from "../../utils/dropzone";
 import Swal from "sweetalert2";
 const missingImg = require("url:../../images/no-img.png");
 
+// LINEA 73
 class PetData extends HTMLElement {
   async connectedCallback() {
     const { token } = state.getState().user;
@@ -44,7 +45,7 @@ class PetData extends HTMLElement {
 
         <label class="label">
         <span>NOMBRE</span>
-        <input type="text" name="name" class="is-success" />
+        <input type="text" name="name" class="is-success" required />
         </label>
 
         <label class="label" id="img">
@@ -56,7 +57,7 @@ class PetData extends HTMLElement {
           <span>UBICACION</span>
           <p>BUSCÁ UN PUNTO DE REFERENCIA PARA REPORTAR A TU MASCOTA. PUEDE SER UNA DIRECCIÓN, UN BARRIO O UNA CIUDAD</p>
           <div id="map" style="width: 335px; height: 335px"></div>
-          <input type="text" name="geoloc" class="search-geoloc">
+          <input type="text" name="geoloc" class="search-geoloc" required>
         </label>
 
         <x-button class="submit" type="primary">${type}</x-button>
