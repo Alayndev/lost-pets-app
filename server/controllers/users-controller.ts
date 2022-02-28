@@ -65,7 +65,6 @@ export async function getUserProfile(userId: number) {
   }
 }
 
-// DUDA: No debería actualizar el email en table Auth también?
 export async function updateUserProfile(
   userId: number,
   userData: { email: string; fullName: string }
@@ -87,7 +86,9 @@ export async function updateUserProfile(
       }
     );
 
-    return userUpdated;
+    const user = await User.findByPk(userId);
+
+    return { userUpdated, user };
   } catch (error) {
     console.error(error);
     return { error };

@@ -87,13 +87,13 @@ export function checkEmailAndPassword(req, res, next) {
   }
 }
 
-export function checkEmailOrFullName(req, res, next) {
-  const { email, fullName }: { email: string; fullName: string } = req.body;
+export function checkPasswordOrFullNameOrEmail(req, res, next) {
+  const { password, fullName, email }: { password: string; fullName: string, email: string } = req.body;
 
-  if (!email && !fullName) {
+  if (!password && !fullName && !email) {
     return res.status(400).json({
       message:
-        "Bad Request! You must include values for email or fullName by body (both or one of them)",
+        "Bad Request! You must include values for password, fullName or email by body (one of them)",
     });
   } else {
     next();

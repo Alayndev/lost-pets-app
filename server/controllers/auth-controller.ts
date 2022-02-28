@@ -1,6 +1,7 @@
 import { Auth } from "../models";
 
 import * as jwt from "jsonwebtoken";
+import * as crypto from "crypto";
 
 import "dotenv/config";
 
@@ -71,6 +72,39 @@ export async function createToken(email: string, password: string) {
 
       return { token };
     }
+  } catch (error) {
+    console.error(error);
+    return { error };
+  }
+}
+
+export async function updateUserAuth(
+  userId: number,
+  password: string,
+  email?: string
+) {
+  if (!userId || !password) {
+    const error = "Controller updateUserAuth() without userId or password";
+    return { error };
+  }
+
+  try {
+    const passwordHashed = crypto
+      .createHash("sha256")
+      .update(password)
+      .digest("hex");
+    console.log(passwordHashed);
+
+    const userUpdated = await Auth.update(
+      { password: passwordHashed, email },
+      {
+        where: {
+          id: userId,
+        },
+      }
+    );
+
+    return { userUpdated };
   } catch (error) {
     console.error(error);
     return { error };

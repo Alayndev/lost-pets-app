@@ -5,7 +5,7 @@ import { dropzonedImg } from "../../utils/dropzone";
 import Swal from "sweetalert2";
 const missingImg = require("url:../../images/no-img.png");
 
-// LINEA 73
+// ACA - LINEA 84
 class PetData extends HTMLElement {
   async connectedCallback() {
     const { token } = state.getState().user;

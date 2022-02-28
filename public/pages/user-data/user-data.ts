@@ -2,7 +2,7 @@ import { Router } from "@vaadin/router";
 import { state } from "../../state";
 import Swal from "sweetalert2";
 
-// PROBLEMA: LINEA 63 Y 90
+// LISTO
 class UserData extends HTMLElement {
   connectedCallback() {
     const cs = state.getState();
@@ -53,7 +53,7 @@ class UserData extends HTMLElement {
     const submit = this.querySelector("x-button");
     const loginForm: any = this.querySelector(".login");
 
-    // Si tengo token, es decir estoy logeado, puedo cambiar mis datos. SOLAMENTE estoy actualizando el nombre, NO estoy cambiando contraseña
+    // Si tengo token, es decir estoy logeado, puedo cambiar mis datos.
     if (userData.token) {
       loginForm.name.value = userData.fullName;
 
@@ -62,10 +62,9 @@ class UserData extends HTMLElement {
         const value = Object.fromEntries(data.entries());
         console.log(value, "value a ver");
 
-        const res = await state.updateUser(value); // ACA - ACTUALIZAR AUTH - Puedo actualizar email o contraseña en el flujo del Front? O necesito algortimo de abajo para que verifique que ambas son correcta y, además, en el Back actualizar la contraseña en Table Auth PATCH /users/profile
+        const res = await state.updateUser(value); // ACA - ACTUALIZAR AUTH - Hecho
         console.log(res, "json");
 
-        // REPLICAR ESTE IF PARA TODA LA PAGE - Y PARA TODAS LAS DEMÁS TMB
         if (!res.error) {
           Swal.fire({
             icon: "success",
@@ -82,26 +81,32 @@ class UserData extends HTMLElement {
 
         if (password === repeatedPassword) {
           try {
-            // ACA - Hecho
             const res = await state.createOrFindUser({
               fullName,
               email,
               password,
             });
 
-            // ACA - AGREGAR IF
-            // if(res) {
+            console.log(res, "res createOrFindUser() en user-data.ts - 92");
 
-            // }
-            Swal.fire({
-              icon: "success",
-              title: "Bienvenidx!",
-            });
+            if (res === true) {
+              Swal.fire({
+                icon: "success",
+                title: "Bienvenidx!",
+              });
+            } else {
+              Swal.fire({
+                title:
+                  "Ha ocurrido un error al crear su usuario. Por favor intente nuevamente completando todos los campos.",
+              });
+            }
           } catch (err) {
             console.error(err);
           }
         } else {
-          Swal.fire("Verificar las contraseñas. No son iguales.");
+          Swal.fire(
+            "Verificar que las contraseñas sean iguales. Verificar haber incluido un nombre de usuario."
+          );
         }
       });
     }

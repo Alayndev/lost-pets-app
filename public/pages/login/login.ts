@@ -2,8 +2,7 @@ import { Router } from "@vaadin/router";
 import { state } from "../../state";
 import Swal from "sweetalert2";
 
-// ACA
-// Problema: Al ingresar una contraseña erronea NO le informamos nada al usuario. Informarle, solo llega un 400 Bad request en la consola de la dev tools
+// LISTO
 class Login extends HTMLElement {
   connectedCallback() {
     this.render();
@@ -24,12 +23,13 @@ class Login extends HTMLElement {
       </form>
     </div>
     `;
+
     const form: any = this.querySelector(".login");
     form
       .querySelector("x-button")
       .addEventListener("buttonClicked", async (e) => {
         const email = form.email.value;
-        const { exist } = await state.checkMail(email); // Hecho
+        const { exist } = await state.checkMail(email);
 
         try {
           if (exist.exist == true) {
@@ -43,6 +43,24 @@ class Login extends HTMLElement {
           console.error(error);
         }
       });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = form.email.value;
+      const { exist } = await state.checkMail(email);
+
+      try {
+        if (exist.exist == true) {
+          this.renderPass(email);
+        }
+        if (exist.exist == false) {
+          state.saveMail(email);
+          Router.go("/user-data");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    });
   }
 
   renderPass(email) {
@@ -69,8 +87,6 @@ class Login extends HTMLElement {
       .addEventListener("buttonClicked", async (e: any) => {
         e.preventDefault();
         const userData = { email, password: form.password.value };
-        // ACA - Hecho - /auth - /auth/token
-        // ACA - AGREGAR IF
 
         const res = await state.createOrFindUser(userData);
         console.log("res en login", res);
@@ -87,6 +103,26 @@ class Login extends HTMLElement {
           Router.go("/user-data");
         }
       });
+
+    form.addEventListener("submit", async (e: any) => {
+      e.preventDefault();
+      const userData = { email, password: form.password.value };
+
+      const res = await state.createOrFindUser(userData);
+      console.log("res en login submit", res);
+
+      if (res === false) {
+        Swal.fire({
+          text: `La contraseña ingresada NO es correcta.`,
+        });
+      } else {
+        Swal.fire({
+          icon: "success",
+          title: "Bienvenidx!",
+        });
+        Router.go("/user-data");
+      }
+    });
   }
 }
 customElements.define("x-login-page", Login);

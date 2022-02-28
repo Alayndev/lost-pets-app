@@ -2,15 +2,15 @@ import { Router } from "@vaadin/router";
 import { state } from "../../state";
 import * as map from "lodash/map";
 
-// ACA - PONER LOADER XQ TARDA, MISMA LÓGICA QUE EN dwf-m6
+// LISTO
 class UserPets extends HTMLElement {
   async connectedCallback() {
     const { token } = state.getState().user;
 
     if (token) {
-      console.log("hola, tengo token");
+      console.log("user con token");
 
-      const { userPets } = await state.getMyPets(); // ACA - Hecho
+      const { userPets } = await state.getMyPets();
 
       if (userPets) {
         userPets.length > 0 ? this.render(userPets) : this.render();
@@ -22,7 +22,6 @@ class UserPets extends HTMLElement {
     }
   }
 
-  // ACA, - Hecho
   addListener(container?) {
     console.log(container, "container");
 

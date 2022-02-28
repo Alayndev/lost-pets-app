@@ -13,7 +13,12 @@ import {
   updateUserProfile,
   getUserPets,
 } from "./controllers/users-controller";
-import { authSignUp, createToken, validatePassword } from "./controllers/auth-controller";
+import {
+  authSignUp,
+  createToken,
+  validatePassword,
+  updateUserAuth,
+} from "./controllers/auth-controller";
 import {
   createPet,
   updatePet,
@@ -29,7 +34,7 @@ import {
   hashPassword,
   checkEmail,
   checkEmailAndPassword,
-  checkEmailOrFullName,
+  checkPasswordOrFullNameOrEmail,
   createPetChecker,
   checkPetId,
   updatePetChecker,
@@ -80,11 +85,13 @@ app.post("/auth", checkEmailAndPassword, hashPassword, async (req, res) => {
 
       return res.status(201).json({ user, userCreated, authCreated });
     } else {
-      const passwordValideted = await validatePassword(req.body.email, req._hashPassword);
-      
-      return res.status(201).json({passwordValideted, user, userCreated});
-    }
+      const passwordValideted = await validatePassword(
+        req.body.email,
+        req._hashPassword
+      );
 
+      return res.status(201).json({ passwordValideted, user, userCreated });
+    }
   } catch (err) {
     res.status(400).json({ err });
   }
@@ -123,22 +130,29 @@ app.get("/users/profile", authMiddleware, async (req, res) => {
   }
 });
 
-// DUDA: No debería actualizar el email en table Auth también? De no hacer update en Auth, además de tener los emails desincronizados, al crear el token debemos pasarle el email viejo, o es que ya está creado y no importa?
 app.patch(
   "/users/profile",
-  checkEmailOrFullName,
+  checkPasswordOrFullNameOrEmail,
   authMiddleware,
   async (req, res) => {
     const { id } = req._user;
+    console.log(req.body, "body");
 
     try {
       const usersUpdated = await updateUserProfile(id, req.body);
 
-      // if (email) {
-      //   const authUpdated = await updateUserRecord(id, req.body);
+      // Actualizar contraseña en Table Auth
+      if (req.body.password) {
+        const authUpdated = await updateUserAuth(
+          id,
+          req.body.password,
+          req.body.email
+        );
 
-      //   return res.status(200).json({ usersUpdated, authUpdated, userWhoWasUpdated: id });
-      // }
+        return res
+          .status(200)
+          .json({ usersUpdated, authUpdated, userWhoWasUpdated: id });
+      }
 
       res.status(200).json({ usersUpdated, userWhoWasUpdated: id });
     } catch (err) {

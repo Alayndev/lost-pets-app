@@ -63,8 +63,7 @@ const state = {
 
     console.log(res);
 
-    // Adaptar
-    if (res.passwordValideted.exist === true) {
+    if (res.authCreated === true || res.passwordValideted.exist === true) {
       const cs = this.getState();
       cs.user = res.user;
       cs.user.created = res.userCreated;
@@ -94,11 +93,12 @@ const state = {
 
   async updateUser(data) {
     const cs = this.getState();
-    const email = cs.user.email;
+
+    console.log(data, "updateUser state 98");
 
     const bodyToEndpoint = {
       fullName: data.name,
-      email: email,
+      password: data.password,
     };
 
     const updated = await (
@@ -112,8 +112,12 @@ const state = {
       })
     ).json();
 
-    console.log(updated);
-    if (updated.usersUpdated.length === 1) {
+    console.log(updated, "res");
+
+    if (updated.usersUpdated.userUpdated.length === 1) {
+      cs.user.fullName = updated.usersUpdated.user.fullName;
+      this.setState(cs);
+
       return updated;
     } else {
       return { error: "The user was not updated." };
