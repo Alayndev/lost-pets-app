@@ -1,4 +1,3 @@
-import "./index.css";
 import { Router } from "@vaadin/router";
 
 const footprint = require("url:../../images/footprint.png");
@@ -51,20 +50,20 @@ class HeaderComp extends HTMLElement {
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           
             <li class="nav-item">
-              <button type="button" class="btn btn-primary me"> Mis datos </button>
+              <button type="button" class="btn btn-primary me btn-header"> Mis datos </button>
             </li>
 
             <li class="nav-item">
-              <button type="button" class="btn btn-primary my-pets">  Mis mascotas reportadas </button>
+              <button type="button" class="btn btn-primary my-pets btn-header">  Mis mascotas reportadas </button>
             </li>
 
             <li class="nav-item">
-              <button type="button" class="btn btn-primary pet-data"> Reportar mascota </button>
+              <button type="button" class="btn btn-primary pet-data btn-header"> Reportar mascota </button>
             </li>
           
 
             <li class="nav-item">
-              <button type="button" class="btn btn-outline-success log-in"> Iniciar sesión </button>
+              <button type="button" class="btn btn-outline-success log-in btn-header"> Iniciar sesión </button>
             </li>
 
           

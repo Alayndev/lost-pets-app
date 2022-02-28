@@ -41,29 +41,39 @@ class PetData extends HTMLElement {
       <x-header-comp> </x-header-comp>
 
       <form class="pet-data card">
-        <h1> ${type} mascota perdida</h1>
+        <h1 class="title"> ${type} mascota perdida</h1>
 
-        <label class="label">
-        <span>NOMBRE</span>
-        <input type="text" name="name" class="is-success" required />
+        <div class="sub-container">
+        
+                <label class="label">
+                <span>NOMBRE</span>
+                <input type="text" name="name" class="is-success" required />
+                </label>
+        
+                <label class="label" id="img">
+                  <img class="imgUrlPet pet-card__img" name="imgURL" src=${missingImg} crossorigin="anonymous">
+                  <br />
+                  <x-button type="btn btn-outline-success buttonCentered" id="buttonImg"> Agregar/Modificar foto</x-button>
+                </label>
+  
+        </div>
+
+        <label class="label sub-container">
+              <span>UBICACION</span>
+              <p class="subtitle">BUSCÁ UN PUNTO DE REFERENCIA PARA REPORTAR A TU MASCOTA. PUEDE SER UNA DIRECCIÓN, UN BARRIO O UNA CIUDAD</p>
+              <div id="map" style="width: 335px; height: 335px"></div>
+              <input type="text" name="geoloc" class="search-geoloc" required>
+
+              
+              <x-button class="submit" type="btn btn-outline-success buttonCentered">${type}</x-button>
+              
+              <x-button type="btn btn-outline-danger buttonCentered" class=${
+            pet ? "finded" : "finded"
+          }>${pet ? "Reportar como encontrado" : "Cancelar"}</x-button>
         </label>
 
-        <label class="label" id="img">
-          <img class="imgUrlPet" name="imgURL" src=${missingImg} crossorigin="anonymous">
-          <x-button type="secondary" id="buttonImg">agregar/modificar foto</x-button>
-        </label>
 
-        <label class="label">
-          <span>UBICACION</span>
-          <p>BUSCÁ UN PUNTO DE REFERENCIA PARA REPORTAR A TU MASCOTA. PUEDE SER UNA DIRECCIÓN, UN BARRIO O UNA CIUDAD</p>
-          <div id="map" style="width: 335px; height: 335px"></div>
-          <input type="text" name="geoloc" class="search-geoloc" required>
-        </label>
 
-        <x-button class="submit" type="primary">${type}</x-button>
-        <x-button type=${pet ? "secondary" : "cancel"} class=${
-      pet ? "finded" : "finded"
-    }>${pet ? "Reportar como encontrado" : "Cancelar"}</x-button>
       </form>
     </div>
     `;
@@ -71,6 +81,7 @@ class PetData extends HTMLElement {
     const petDataForm: any = this.querySelector(".pet-data");
     const buttonImg = this.querySelector("#buttonImg");
 
+    // ADEMÁS para editar una pet NO aparece el mapa
     // ACA - HAY UN PROBLEMA - ANTES FUNCIONABA BIEN, LO UNICO QUE CAMBIE FUE LINEA 12 A 15, ESE IF
     if (pet) {
       //inserta los datos de la mascota en el formulario
@@ -146,7 +157,7 @@ class PetData extends HTMLElement {
       async (e) => {
         //enviar al servidor que se encontró a la pet
         // ACA - Hecho
-        const res = await state.findedPet(pet.id);
+        const res = await state.petFound(pet.id);
 
         console.log(res, "res findedPet() en pet-data page 140");
 

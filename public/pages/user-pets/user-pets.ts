@@ -27,8 +27,10 @@ class UserPets extends HTMLElement {
     console.log(container, "container");
 
     map(container, (pet) => {
-      pet.addEventListener("report-pet", async (e) => {
-        const { id } = e.detail;
+      pet.addEventListener("click", async (e) => {
+        console.log(pet, "escucho report-pet para editar e ir a /pet-data");
+
+        const id = pet.getAttribute("petId");
         state.setPetData({ id: parseInt(id) });
         Router.go("/pet-data");
       });
@@ -45,12 +47,15 @@ class UserPets extends HTMLElement {
       <x-header-comp> </x-header-comp>
       
       <h1 class="title">Mis mascotas reportadas</h1>
-      <div class="pets-container main-container">
+      <div class="sub-container">
         ${
           !pets
             ? `<h1 class="title">AUN NO REPORTASTE MASCOTAS PERDIDAS</h1>`
             : map(pets, (pet) => {
-                return `<x-pet-card img=${pet.pictureURL} petId=${pet.id} petName="${pet.fullName}" description="${pet.description}" > ${pet.fullName} </x-pet-card>`;
+                return `<x-pet-card img=${pet.pictureURL} petId=${pet.id} petName="${pet.fullName}" description="${pet.description}" > ${pet.fullName} </x-pet-card>
+                
+                <x-button class="report-pet" type="btn btn-outline-success" petId=${pet.id} > Editar información sobre ${pet.fullName} </x-button>
+                `;
               }).join("")
         }
       </div>
@@ -66,7 +71,7 @@ class UserPets extends HTMLElement {
 
     `;
 
-    this.addListener(this.querySelectorAll("x-pet-card"));
+    this.addListener(this.querySelectorAll(".report-pet"));
   }
 }
 customElements.define("x-user-pets-page", UserPets);

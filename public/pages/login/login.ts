@@ -71,14 +71,21 @@ class Login extends HTMLElement {
         const userData = { email, password: form.password.value };
         // ACA - Hecho - /auth - /auth/token
         // ACA - AGREGAR IF
-        await state.createOrFindUser(userData).then((res) => {
+
+        const res = await state.createOrFindUser(userData);
+        console.log("res en login", res);
+
+        if (res === false) {
+          Swal.fire({
+            text: `La contraseña ingresada NO es correcta.`,
+          });
+        } else {
           Swal.fire({
             icon: "success",
             title: "Bienvenidx!",
           });
-          
           Router.go("/user-data");
-        });
+        }
       });
   }
 }

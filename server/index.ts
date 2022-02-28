@@ -13,7 +13,7 @@ import {
   updateUserProfile,
   getUserPets,
 } from "./controllers/users-controller";
-import { authSignUp, createToken } from "./controllers/auth-controller";
+import { authSignUp, createToken, validatePassword } from "./controllers/auth-controller";
 import {
   createPet,
   updatePet,
@@ -79,9 +79,12 @@ app.post("/auth", checkEmailAndPassword, hashPassword, async (req, res) => {
       const { auth, authCreated } = await authSignUp(user, req._hashPassword);
 
       return res.status(201).json({ user, userCreated, authCreated });
+    } else {
+      const passwordValideted = await validatePassword(req.body.email, req._hashPassword);
+      
+      return res.status(201).json({passwordValideted, user, userCreated});
     }
 
-    res.status(201).json({ user, userCreated });
   } catch (err) {
     res.status(400).json({ err });
   }

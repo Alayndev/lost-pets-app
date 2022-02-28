@@ -1,11 +1,8 @@
 import { Router } from "@vaadin/router";
 import Swal from "sweetalert2";
 
-import "./index.css";
-
 import { state } from "../../state";
 
-// HACER MODAL - LINEA 57
 class HomePage extends HTMLElement {
   connectedCallback() {
     this.render();
@@ -54,7 +51,6 @@ class HomePage extends HTMLElement {
     }
   }
 
-  // ACA - MODAL - APARECE AL FINAL - HACERLO CON MODAL BOOTSTRAP UNA VEZ QUE FUNCIONE
   reportPet(pet) {
     console.log(pet, "estas logeado");
 
@@ -62,7 +58,7 @@ class HomePage extends HTMLElement {
     div.innerHTML = `
 
     <div class="exit button is-danger">X</div>
-    <h2>Reportar info de ${pet.name}</h2>
+    <h2 class="title">Reportar info de ${pet.name}</h2>
     <form class="report-pet__form">
       <label class="report-pet__label">
         <span>TU NOMBRE</span>
@@ -76,11 +72,11 @@ class HomePage extends HTMLElement {
         <span>¿DÓNDE LO VISTE?</span>
         <textarea class="report-pet__input textarea" name="report" required></textarea>
       </label>
-      <x-button type="primary">Enviar reporte</x-button>
+      <x-button type="btn btn-outline-success">Enviar reporte</x-button>
     </form>
     `;
-    div.className = "report-pet";
-    div.classList.add("report-pet");
+    div.className = "report-this-pet";
+    div.classList.add("report-this-pet");
     div.classList.add("has-background-grey-darker");
     div.classList.add("has-text-light");
     this.appendChild(div);

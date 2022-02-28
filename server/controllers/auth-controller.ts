@@ -28,6 +28,22 @@ export async function authSignUp(user, password: string) {
   }
 }
 
+export async function validatePassword(email, password: string) {
+  if (!password) {
+    const error = "Controller validatePassword() without password";
+    return { error };
+  }
+
+  try {
+    const userFound = await Auth.findOne({ where: { email, password } });
+
+    return { exist: userFound ? true : false };
+  } catch (error) {
+    console.error(error);
+    return { error };
+  }
+}
+
 export async function createToken(email: string, password: string) {
   if (!email || !password) {
     const error = "Controller createToken() without email and/or password";

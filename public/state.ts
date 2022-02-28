@@ -1,9 +1,6 @@
-const API_URL =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:3000"
-    : "https://lost-pet-finder-app.herokuapp.com";
+//const API_URL = "https://lost-pet-finder-app.herokuapp.com";
 
-// const API_URL = "http://localhost:3000";
+const API_URL = "http://localhost:3000";
 console.log(API_URL);
 
 const state = {
@@ -48,13 +45,13 @@ const state = {
     });
   },
 
-  // fullName? opcional xq lo uso en login.ts page para que encuentre al user. Obligatorio en user-data.ts page
+  // fullName? : Es opcional xq lo uso en login.ts page para que encuentre al user. Obligatorio en user-data.ts page
   async createOrFindUser(userData: {
     fullName?: string;
     email: string;
     password: string;
   }) {
-    const { user, userCreated } = await (
+    const res = await (
       await fetch(API_URL + "/auth", {
         method: "POST",
         headers: {
@@ -64,18 +61,22 @@ const state = {
       })
     ).json();
 
-    console.log(user);
+    console.log(res);
 
-    const cs = this.getState();
-    cs.user = user;
-    cs.user.created = userCreated;
-    this.setState(cs);
+    // Adaptar
+    if (res.passwordValideted.exist === true) {
+      const cs = this.getState();
+      cs.user = res.user;
+      cs.user.created = res.userCreated;
+      this.setState(cs);
 
-    return await this.getToken(userData.email, userData.password);
+      return await this.getToken(userData.email, userData.password);
+    } else {
+      return false;
+    }
   },
 
   async getToken(email, password) {
-    // "/auth/token"
     const cs = this.getState();
     const token = await (
       await fetch(API_URL + "/auth/token", {
@@ -256,7 +257,6 @@ const state = {
   },
 
   // Agregar description
-  // Cambiar nombre a reportPet()
   async createPet({ fullName, dataURL }) {
     const cs = this.getState();
     const lat = cs.petData.lat;
@@ -287,8 +287,7 @@ const state = {
     return petCreated;
   },
 
-  // Cambiar a petFound()
-  async findedPet(id) {
+  async petFound(id) {
     const cs = this.getState();
     const petEdited = await (
       await fetch(API_URL + `/pets?petId=${id}`, {
