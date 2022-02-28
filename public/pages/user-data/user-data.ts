@@ -62,13 +62,22 @@ class UserData extends HTMLElement {
         const value = Object.fromEntries(data.entries());
         console.log(value, "value a ver");
 
-        const res = await state.updateUser(value); // ACA - ACTUALIZAR AUTH - Hecho
-        console.log(res, "json");
+        const password = loginForm.password.value;
+        const repeatedPassword = loginForm.repeatedPassword.value;
 
-        if (!res.error) {
-          Swal.fire({
-            icon: "success",
-          });
+        if (password === repeatedPassword) {
+          const res = await state.updateUser(value); // ACA - ACTUALIZAR AUTH - Hecho
+          console.log(res, "json");
+
+          if (!res.error) {
+            Swal.fire({
+              icon: "success",
+            });
+          }
+        } else {
+          Swal.fire(
+            "Verificar que las contraseñas ingresadas coincidan."
+          );
         }
       });
     } else {
@@ -105,7 +114,7 @@ class UserData extends HTMLElement {
           }
         } else {
           Swal.fire(
-            "Verificar que las contraseñas sean iguales. Verificar haber incluido un nombre de usuario."
+            "Verificar que las contraseñas ingresadas coincidan."
           );
         }
       });
