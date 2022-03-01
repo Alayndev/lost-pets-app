@@ -113,4 +113,7 @@ body {
 }
 .pet-card {
   max-width: 335px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 12px -5px rgb(0 0 0 / 90%);
+  padding: 5px 0;
 }

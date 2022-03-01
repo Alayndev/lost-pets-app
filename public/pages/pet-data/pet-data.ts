@@ -131,10 +131,15 @@ class PetData extends HTMLElement {
 
           if (res.petCreated === false) {
             Swal.fire({
-              title: "Este reporte ya existe. Asegúrese de completar los campos correctamente.",
+              title:
+                "Este reporte ya existe. Asegúrese de completar los campos correctamente.",
             });
           } else {
-            Swal.fire({ icon: "success" });
+            Swal.fire({
+              icon: "success",
+              title:
+                "Su mascota ha sido reportada correctamente. Este atento a su casilla de correo, inclusive al spam, ya que por allí le llegarán los reportes de su mascota.",
+            });
           }
         }
       }
