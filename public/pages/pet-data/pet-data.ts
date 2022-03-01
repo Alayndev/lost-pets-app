@@ -5,7 +5,7 @@ import { dropzonedImg } from "../../utils/dropzone";
 import Swal from "sweetalert2";
 const missingImg = require("url:../../images/no-img.png");
 
-// ACA - LINEA 84
+// LISTO
 class PetData extends HTMLElement {
   async connectedCallback() {
     const { token } = state.getState().user;
@@ -40,7 +40,7 @@ class PetData extends HTMLElement {
       <div>
       <x-header-comp> </x-header-comp>
 
-      <form class="pet-data card">
+      <form class="pet-data form card">
         <h1 class="title"> ${type} mascota perdida</h1>
 
         <div class="sub-container">
@@ -49,10 +49,11 @@ class PetData extends HTMLElement {
                 <span>NOMBRE</span>
                 <input type="text" name="name" class="is-success" required />
                 </label>
-        
+                
                 <label class="label" id="img">
                   <img class="imgUrlPet pet-card__img" name="imgURL" src=${missingImg} crossorigin="anonymous">
                   <br />
+                  <p class="subtitle"> Imagen hasta 60kB. Haga click arriba para seleccionar la imagen </p>
                   <x-button type="btn btn-outline-success buttonCentered" id="buttonImg"> Agregar/Modificar foto</x-button>
                 </label>
   
@@ -68,8 +69,8 @@ class PetData extends HTMLElement {
               <x-button class="submit" type="btn btn-outline-success buttonCentered">${type}</x-button>
               
               <x-button type="btn btn-outline-danger buttonCentered" class=${
-            pet ? "finded" : "finded"
-          }>${pet ? "Reportar como encontrado" : "Cancelar"}</x-button>
+                pet ? "finded" : "cancel"
+              }>${pet ? "Reportar como encontrado" : "Cancelar"}</x-button>
         </label>
 
 
@@ -78,14 +79,11 @@ class PetData extends HTMLElement {
     </div>
     `;
     const pic = this.querySelector(".imgUrlPet");
-    const petDataForm: any = this.querySelector(".pet-data");
+    const petDataForm: any = this.querySelector(".form");
     const buttonImg = this.querySelector("#buttonImg");
 
-    // ADEMÁS para editar una pet NO aparece el mapa
-    // ACA - HAY UN PROBLEMA - ANTES FUNCIONABA BIEN, LO UNICO QUE CAMBIE FUE LINEA 12 A 15, ESE IF
     if (pet) {
-      //inserta los datos de la mascota en el formulario
-      //petDataForm.name.value = pet.fullName;
+      petDataForm.name.value = pet.fullName;
       pic.setAttribute("src", pet.pictureURL);
       petDataForm.geoloc.value = `${pet.lat},${pet.lng}`;
     }
@@ -101,7 +99,7 @@ class PetData extends HTMLElement {
     this.querySelector(".submit").addEventListener(
       "buttonClicked",
       async (e) => {
-        const petDataForm: any = this.querySelector(".pet-data");
+        const petDataForm: any = this.querySelector(".form");
 
         if (type == "Editar") {
           // Edita la mascota
@@ -109,7 +107,6 @@ class PetData extends HTMLElement {
           const res = await state.editPet({
             id: pet.id,
             fullName: petDataForm.name.value,
-            dataURL: petDataForm.imgURL.getAttribute("src"),
           });
 
           console.log(res, "res editPet() en pet-data page 96");
@@ -128,27 +125,24 @@ class PetData extends HTMLElement {
           // ACA - Hecho
           const res = await state.createPet({
             fullName: petDataForm.name.value,
-            dataURL: petDataForm.imgURL.getAttribute("src"),
           });
 
-          console.log(res, "res createPet() en pet-data page 115");
+          console.log(res, "res createPet() en pet-data page 134");
 
           if (res.petCreated === false) {
             Swal.fire({
-              title: "This pet report already exists",
+              title: "Este reporte ya existe. Asegúrese de completar los campos correctamente.",
             });
           } else {
             Swal.fire({ icon: "success" });
           }
         }
-
-        console.log();
       }
     );
 
     this.querySelector(".cancel")?.addEventListener("buttonClicked", (e) => {
       //limpiar formulario
-      const petDataForm: any = this.querySelector(".pet-data");
+      const petDataForm: any = this.querySelector(".form");
       petDataForm.reset();
     });
 
@@ -172,7 +166,7 @@ class PetData extends HTMLElement {
           });
         }
 
-        const petDataForm: any = this.querySelector(".pet-data");
+        const petDataForm: any = this.querySelector(".form");
         state.data.petData = {};
         petDataForm.reset();
       }

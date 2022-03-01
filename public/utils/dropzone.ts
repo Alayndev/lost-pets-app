@@ -24,6 +24,7 @@ export async function dropzonedImg(pic, buttonImg) {
 
   myDropzone.on("thumbnail", function (file) {
     dataURL = file.dataURL;
+    state.setDataURL(dataURL);
     console.log(dataURL, "dataURL para Cloudinary endpoint POST /users/pets");
   });
 

@@ -230,11 +230,19 @@ const state = {
     this.setState(cs);
   },
 
-  // Agregar description, tambien en page para editar/reportar
-  async editPet({ id, fullName, dataURL }) {
+  setDataURL(dataURL) {
     const cs = this.getState();
-    const lat = cs.petData.lat; // lat y lng desde page?
+    cs.dataURL = dataURL;
+    this.setState(cs);
+  },
+
+  // Agregar description, tambien en page para editar/reportar
+  async editPet({ id, fullName, }) {
+    const cs = this.getState();
+    const lat = cs.petData.lat;
     const lng = cs.petData.lng;
+    const dataURL = cs.dataURL;
+
 
     const bodyToEndpoint = {
       fullName,
@@ -261,10 +269,11 @@ const state = {
   },
 
   // Agregar description
-  async createPet({ fullName, dataURL }) {
+  async createPet({ fullName }) {
     const cs = this.getState();
     const lat = cs.petData.lat;
     const lng = cs.petData.lng;
+    const dataURL = cs.dataURL;
 
     const bodyToEndpoint = {
       fullName,

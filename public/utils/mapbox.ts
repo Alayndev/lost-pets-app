@@ -10,7 +10,7 @@ import { state } from "../state";
 const TOKEN = process.env.MAPBOX_TOKEN;
 
 export async function mapping(initial?) {
-  const form: any = document.querySelector(".pet-data"); // Puedo selecionarlo al NO tener shadow root en la page/comp pet-data.ts
+  const form: any = document.querySelector(".form"); // Puedo selecionarlo al NO tener shadow root en la page/comp pet-data.ts
   const mapboxClient = new MapboxClient(TOKEN);
 
   function initMap() {

@@ -104,11 +104,13 @@ body {
   width: 100%;
 }
 
-.pet-card__img{
+.pet-card__img {
   width: 290px;
   height: 290px;
   object-fit: cover;
+  display: block;
+  margin: 0 auto;
 }
-.pet-card{
+.pet-card {
   max-width: 335px;
 }

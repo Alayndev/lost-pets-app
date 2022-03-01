@@ -3,21 +3,6 @@ class CardComp extends HTMLElement {
     this.render();
   }
 
-  addStyle() {
-    const style = document.createElement("style");
-    style.textContent = `
-    .pet-card__img{
-      width: 290px;
-      height: 290px;
-      object-fit: cover;
-    }
-    .pet-card{
-      max-width: 335px;
-    }
-    `;
-    this.appendChild(style);
-  }
-
   addListener(id) {
     this.querySelector(".report").addEventListener("click", (e) => {
       e.preventDefault();
@@ -36,7 +21,6 @@ class CardComp extends HTMLElement {
       <img class="card-img-top pet-card__img" src=${img} crossorigin="anonymous" alt="pet-img">
       <div class="card-body">
         <h5 class="card-title">${name}</h5>
-        <p class="card-text">${description}</p>
         
         <ul class="pet-card__links">
           <a class="pet-card__link report">REPORTAR INFORMACIÓN</a>
@@ -44,7 +28,6 @@ class CardComp extends HTMLElement {
       </div>
     </div>    `;
 
-    this.addStyle();
     this.addListener(id);
   }
 }
