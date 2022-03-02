@@ -53,7 +53,8 @@ class PetData extends HTMLElement {
                 <label class="label" id="img">
                   <img class="imgUrlPet pet-card__img" name="imgURL" src=${missingImg} crossorigin="anonymous">
                   <br />
-                  <p class="subtitle"> Imagen hasta 60kB. Haga click arriba para seleccionar la imagen </p>
+                  <p class="subtitle"> Imagen hasta 60kB. Haga click arriba para seleccionar la imagen. </p>
+                  <p class="subtitle"> Si su imagen es más pesada, asegúrese de achicarla, de otro modo el reporte NO se realizará. Hágalo en segundos con <a href="https://www.achicarimagenes.com.ar/" target="_blank"> esta web </a></p>    
                   <x-button type="btn btn-outline-success buttonCentered" id="buttonImg"> Agregar/Modificar foto</x-button>
                 </label>
   
