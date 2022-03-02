@@ -5,7 +5,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 export async function sendEmail(petOwner: string, phoneNumber: number, petName: string, report: string) {
   const msg = {
     to: petOwner, // petOwner - Change to your recipient
-    from: "saezalayn@gmail.com", // Change to your verified sender
+    from: "alaynsaez@hotmail.com", // Change to your verified sender
     subject: `There has been a report of your pet: ${petName}`,
     text: `There has been a report of your pet called ${petName}. Someone reported: " ${report} ". You can get in touch with the person who reported: ${phoneNumber} `,
     html: `There has been a report of your pet called ${petName}. Someone reported: " ${report} ". You can get in touch with the person who reported: ${phoneNumber} `,
