@@ -106,12 +106,13 @@ body {
 
 .pet-card__img {
   width: 290px;
-  height: 290px;
+  height: 190px;
   object-fit: cover;
   display: block;
   margin: 0 auto;
 }
 .pet-card {
+  height: 400px;
   max-width: 335px;
   border-radius: 10px;
   box-shadow: 1px 1px 12px -5px rgb(0 0 0 / 90%);

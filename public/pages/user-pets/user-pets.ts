@@ -51,7 +51,7 @@ class UserPets extends HTMLElement {
           !pets
             ? `<h1 class="title">AUN NO REPORTASTE MASCOTAS PERDIDAS</h1>`
             : map(pets, (pet) => {
-                return `<x-pet-card img=${pet.pictureURL} petId=${pet.id} petName="${pet.fullName}" description="${pet.description}" > ${pet.fullName} </x-pet-card>
+                return `<x-pet-card img=${pet.pictureURL} petId=${pet.id} petName="${pet.fullName}" description="${pet.description}" loc="${pet.loc}" > ${pet.fullName} </x-pet-card>
                 
                 <x-button class="report-pet" type="btn btn-outline-success" petId=${pet.id} > Editar información sobre ${pet.fullName} </x-button>
                 `;

@@ -49,6 +49,12 @@ class PetData extends HTMLElement {
                 <span>NOMBRE</span>
                 <input type="text" name="name" class="is-success" required />
                 </label>
+
+                <label class="label">
+                <span> DESCRIPCIÓN: </span>
+                <input type="text" name="description" class="is-success" />
+                </label>
+
                 
                 <label class="label" id="img">
                   <img class="imgUrlPet pet-card__img" name="imgURL" src=${missingImg} crossorigin="anonymous">
@@ -108,6 +114,8 @@ class PetData extends HTMLElement {
           const res = await state.editPet({
             id: pet.id,
             fullName: petDataForm.name.value,
+            loc: petDataForm.geoloc.value,
+            description: petDataForm.description.value,
           });
 
           console.log(res, "res editPet() en pet-data page 96");
@@ -126,6 +134,8 @@ class PetData extends HTMLElement {
           // ACA - Hecho
           const res = await state.createPet({
             fullName: petDataForm.name.value,
+            loc: petDataForm.geoloc.value,
+            description: petDataForm.description.value,
           });
 
           console.log(res, "res createPet() en pet-data page 134");

@@ -237,18 +237,19 @@ const state = {
   },
 
   // Agregar description y barrio
-  async editPet({ id, fullName, }) {
+  async editPet({ id, fullName, loc, description }) {
     const cs = this.getState();
     const lat = cs.petData.lat;
     const lng = cs.petData.lng;
     const dataURL = cs.dataURL;
-
 
     const bodyToEndpoint = {
       fullName,
       dataURL,
       lat,
       lng,
+      loc,
+      description,
     };
 
     console.log(bodyToEndpoint, "bodyToEndpoint");
@@ -269,7 +270,7 @@ const state = {
   },
 
   // Agregar description y barrio
-  async createPet({ fullName }) {
+  async createPet({ fullName, loc, description }) {
     const cs = this.getState();
     const lat = cs.petData.lat;
     const lng = cs.petData.lng;
@@ -280,6 +281,8 @@ const state = {
       dataURL,
       lat,
       lng,
+      loc,
+      description,
     };
 
     console.log(bodyToEndpoint, "bodyToEndpoint");

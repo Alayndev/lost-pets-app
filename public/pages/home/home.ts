@@ -140,7 +140,7 @@ class HomePage extends HTMLElement {
 
       const petsString = hits
         .map((pet) => {
-          return `<x-pet-card img=${pet.pictureURL} petId=${pet.objectID} petName="${pet.fullName}" description="${pet.description}" > ${pet.fullName} </x-pet-card>`;
+          return `<x-pet-card img=${pet.pictureURL} petId=${pet.objectID} petName="${pet.fullName}" description="${pet.description}" loc="${pet.loc}" > ${pet.fullName} </x-pet-card>`;
         })
         .join("");
 
