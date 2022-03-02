@@ -15,6 +15,7 @@ export async function createPetAlgolia(pet) {
       fullName: pet.get("fullName"),
       pictureURL: pet.get("pictureURL"),
       description: pet.get("description"),
+      loc: pet.get("loc"),
       _geoloc: {
         lat: pet.get("lat"),
         lng: pet.get("lng"),

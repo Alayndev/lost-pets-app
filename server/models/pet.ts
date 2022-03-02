@@ -22,6 +22,11 @@ Pet.init(
       allowNull: false,
     },
 
+    loc: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+
     description: {
       type: DataTypes.STRING,
     },

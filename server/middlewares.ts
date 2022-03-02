@@ -59,6 +59,10 @@ export function bodyToIndexAlgolia(body, id: number, pictureURL: string) {
     };
   }
 
+  if (body.loc) {
+    res.loc = body.loc;
+  }
+
   if (pictureURL) {
     res.pictureURL = pictureURL;
   }
@@ -109,9 +113,9 @@ export function checkPasswordOrFullNameOrEmail(req, res, next) {
 }
 
 export function createPetChecker(req, res, next) {
-  const { fullName, lat, lng, dataURL } = req.body;
+  const { fullName, lat, lng, dataURL, loc } = req.body;
 
-  if (!fullName || !lat || !lng || !dataURL) {
+  if (!fullName || !lat || !lng || !dataURL || !loc) {
     return res.status(400).json({
       message:
         "Bad Request! You must include values for: fullName - lat - lng - dataURL",
@@ -134,9 +138,9 @@ export function checkPetId(req, res, next) {
 // Con && para que sea OPCIONAL - Dif. a createPetChecker donde necesito OBLIGATORIAMENTE todos estos datos
 // Para chequear que me pasan algo para actualizar, sino no tiene sentido hacer las llamadas async
 export function updatePetChecker(req, res, next) {
-  const { fullName, lat, lng, description, dataURL } = req.body;
+  const { fullName, lat, lng, description, dataURL, loc } = req.body;
 
-  if (!fullName && !lat && !lng && !description && !dataURL) {
+  if (!fullName && !lat && !lng && !description && !dataURL && !loc) {
     return res
       .status(400)
       .json({ error: "The client did not send any information to update" });

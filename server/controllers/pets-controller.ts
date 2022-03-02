@@ -3,10 +3,16 @@ import { bodyToIndexAlgolia } from "../middlewares";
 
 export async function createPet(
   userId: number,
-  petData: { fullName: string; lat: number; lng: number; description: string },
+  petData: {
+    fullName: string;
+    lat: number;
+    lng: number;
+    description: string;
+    loc: string;
+  },
   pictureURL: string
 ) {
-  const { fullName, lat, lng, description } = petData;
+  const { fullName, lat, lng, description, loc } = petData;
 
   if (!petData || !userId) {
     const error =
@@ -22,6 +28,7 @@ export async function createPet(
         fullName,
         lat,
         lng,
+        loc,
         userId,
       },
 
@@ -29,6 +36,7 @@ export async function createPet(
         fullName,
         lat,
         lng,
+        loc,
         description,
         pictureURL,
         state: true,
@@ -44,11 +52,17 @@ export async function createPet(
 }
 
 export async function updatePet(
-  petData: { fullName: string; lat: number; lng: number; description: string },
+  petData: {
+    fullName: string;
+    lat: number;
+    lng: number;
+    description: string;
+    loc: string;
+  },
   pictureURL: string,
   petId: number
 ) {
-  const { fullName, lat, lng, description } = petData;
+  const { fullName, lat, lng, description, loc } = petData;
 
   if (!petData || !petId) {
     const error =
@@ -58,7 +72,7 @@ export async function updatePet(
 
   try {
     const petsUpdated = await Pet.update(
-      { fullName, lat, lng, description, pictureURL },
+      { fullName, lat, lng, description, pictureURL, loc },
       { where: { id: petId } }
     );
 
