@@ -89,7 +89,6 @@ class HomePage extends HTMLElement {
     form
       .querySelector("x-button")
       .addEventListener("buttonClicked", async (e: any) => {
-        console.log("escucha el custom event"); // Si no lo escucha, ver como es en otras pages--> user-pets.ts --> addListener(container)
 
         const report = {
           petId: pet.id,
