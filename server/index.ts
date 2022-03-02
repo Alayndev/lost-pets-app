@@ -316,7 +316,6 @@ app.get("/users/reports", authMiddleware, async (req, res) => {
 });
 
 //---------------------------------- Servir el Front: ----------------------------------//
-// Servir el Front: En modo dev: "../dist" - En production/Heroku:  "../../dist" --> Por ahora con el ternario va bien, pero si falla en alguna es por esto problablemente
 const dir = process.env.NODE_ENV === "development" ? "../dist" : "../../dist";
 
 const staticDirPath = path.resolve(__dirname, dir);
@@ -330,12 +329,3 @@ app.get("*", function (req, res) {
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
-
-// PASOS PARA ENDPOINTS:
-
-// ADAPTAR CON TEORIA -- OK
-// Repasar métodos Sequelize y Algolia con docs -- OK  --> https://sequelize.org/v7/ || https://www.algolia.com/doc/api-reference/api-methods/save-objects/
-// Revisar y probar en Postman -- OK
-// Crear método para consumir este endpoint en state --
-// Consumirlo desde la page --
-// Deploy --

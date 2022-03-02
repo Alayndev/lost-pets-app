@@ -41,7 +41,7 @@ export function authMiddleware(req, res, next) {
 }
 
 //Function para formatear data para pasarle a Algolia
-export function bodyToIndexAlgolia(body, id: number) {
+export function bodyToIndexAlgolia(body, id: number, pictureURL: string) {
   const res: any = {};
 
   if (id) {
@@ -57,6 +57,10 @@ export function bodyToIndexAlgolia(body, id: number) {
       lat: body.lat,
       lng: body.lng,
     };
+  }
+
+  if (pictureURL) {
+    res.pictureURL = pictureURL;
   }
 
   return res;
@@ -88,7 +92,11 @@ export function checkEmailAndPassword(req, res, next) {
 }
 
 export function checkPasswordOrFullNameOrEmail(req, res, next) {
-  const { password, fullName, email }: { password: string; fullName: string, email: string } = req.body;
+  const {
+    password,
+    fullName,
+    email,
+  }: { password: string; fullName: string; email: string } = req.body;
 
   if (!password && !fullName && !email) {
     return res.status(400).json({
@@ -154,8 +162,7 @@ export function checkLatLng(req, res, next) {
 
   if (!lat || !lng) {
     return res.status(400).json({
-      message:
-        "Bad Request! You must include values for: lat and lng",
+      message: "Bad Request! You must include values for: lat and lng",
     });
   } else {
     next();

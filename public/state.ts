@@ -236,7 +236,7 @@ const state = {
     this.setState(cs);
   },
 
-  // Agregar description, tambien en page para editar/reportar
+  // Agregar description y barrio
   async editPet({ id, fullName, }) {
     const cs = this.getState();
     const lat = cs.petData.lat;
@@ -268,7 +268,7 @@ const state = {
     return petEdited;
   },
 
-  // Agregar description
+  // Agregar description y barrio
   async createPet({ fullName }) {
     const cs = this.getState();
     const lat = cs.petData.lat;

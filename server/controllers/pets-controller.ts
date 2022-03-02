@@ -63,7 +63,7 @@ export async function updatePet(
     );
 
     if (petsUpdated > [0]) {
-      const petDataToAlgolia = bodyToIndexAlgolia(petData, petId);
+      const petDataToAlgolia = bodyToIndexAlgolia(petData, petId, pictureURL);
       return { petsUpdated, petDataToAlgolia };
     } else {
       const error = "Pet not found - The petId is wrong or does not exist";
