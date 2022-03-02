@@ -2,7 +2,6 @@ import { Router } from "@vaadin/router";
 import { state } from "../../state";
 import Swal from "sweetalert2";
 
-// LISTO
 class UserData extends HTMLElement {
   connectedCallback() {
     const cs = state.getState();
@@ -66,7 +65,7 @@ class UserData extends HTMLElement {
         const repeatedPassword = loginForm.repeatedPassword.value;
 
         if (password === repeatedPassword) {
-          const res = await state.updateUser(value); // ACA - ACTUALIZAR AUTH - Hecho
+          const res = await state.updateUser(value); 
           console.log(res, "json");
 
           if (!res.error) {

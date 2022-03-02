@@ -2,7 +2,6 @@ import { Router } from "@vaadin/router";
 import { state } from "../../state";
 import Swal from "sweetalert2";
 
-// LISTO
 class Login extends HTMLElement {
   connectedCallback() {
     this.render();

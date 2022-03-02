@@ -5,7 +5,6 @@ import { dropzonedImg } from "../../utils/dropzone";
 import Swal from "sweetalert2";
 const missingImg = require("url:../../images/no-img.png");
 
-// LISTO
 class PetData extends HTMLElement {
   async connectedCallback() {
     const { token } = state.getState().user;
@@ -20,9 +19,9 @@ class PetData extends HTMLElement {
     if (petData.id) {
       console.log("entro al if");
 
-      await state.getPetData(); // ACA - Hecho
+      await state.getPetData(); 
 
-      const { petData } = state.getState(); // Prefiero usar lo que guardamos en el state que para eso está. Usamos la data del state que cargamos en el state method, allí cargamos la data que traemos del endpoint en el state
+      const { petData } = state.getState(); 
 
       this.render(petData);
     } else {
@@ -95,11 +94,9 @@ class PetData extends HTMLElement {
       petDataForm.geoloc.value = `${pet.lat},${pet.lng}`;
     }
 
-    // ACA - Hecho
     //inicializa el mapa
     pet ? mapping([pet.lat, pet.lng]) : mapping();
 
-    // ACA - Hecho
     //inicializa dropzone
     dropzonedImg(pic, buttonImg);
 
@@ -110,7 +107,6 @@ class PetData extends HTMLElement {
 
         if (type == "Editar") {
           // Edita la mascota
-          // ACA - Hecho
           const res = await state.editPet({
             id: pet.id,
             fullName: petDataForm.name.value,
@@ -131,7 +127,6 @@ class PetData extends HTMLElement {
 
         if (type == "Reportar") {
           // Crea la mascota
-          // ACA - Hecho
           const res = await state.createPet({
             fullName: petDataForm.name.value,
             loc: petDataForm.geoloc.value,
@@ -166,7 +161,6 @@ class PetData extends HTMLElement {
       "buttonClicked",
       async (e) => {
         //enviar al servidor que se encontró a la pet
-        // ACA - Hecho
         const res = await state.petFound(pet.id);
 
         console.log(res, "res findedPet() en pet-data page 140");

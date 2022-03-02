@@ -2,7 +2,6 @@ import { Router } from "@vaadin/router";
 import { state } from "../../state";
 import * as map from "lodash/map";
 
-// LISTO
 class UserPets extends HTMLElement {
   async connectedCallback() {
     const { token } = state.getState().user;
