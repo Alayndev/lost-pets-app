@@ -63,6 +63,10 @@ export function bodyToIndexAlgolia(body, id: number, pictureURL: string) {
     res.loc = body.loc;
   }
 
+  if (body.description) {
+    res.description = body.description;
+  }
+
   if (pictureURL) {
     res.pictureURL = pictureURL;
   }
