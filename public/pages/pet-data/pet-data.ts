@@ -95,7 +95,7 @@ class PetData extends HTMLElement {
     }
 
     //inicializa el mapa
-    pet ? mapping([pet.lat, pet.lng]) : mapping();
+    pet ? mapping([pet.lng, pet.lat]) : mapping();
 
     //inicializa dropzone
     dropzonedImg(pic, buttonImg);
