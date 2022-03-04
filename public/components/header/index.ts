@@ -54,7 +54,7 @@ class HeaderComp extends HTMLElement {
   }
 
   render(user?) {
-    const textContent = user.email ? user.email : "Iniciar sesión";
+    const textContent = user.email ? user.email : "Iniciar Sesión";
 
     this.innerHTML = `
     <nav class="navbar navbar-expand-md navbar-light bg-light">

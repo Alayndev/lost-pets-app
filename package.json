@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "sync": "ts-node ./server/sync.ts",
-    "dev:api": "nodemon --watch ./server/index.ts --exec ts-node ./server/index.ts",
+    "dev:api": "nodemon --watch 'server/**/*' -e ts --exec 'ts-node ./server/index.ts'",
     "dev:front": "parcel serve ./public/index.html",
     "dev": "yarn build:front && yarn dev:api",
     "build:api": "tsc",
