@@ -91,7 +91,8 @@ class PetData extends HTMLElement {
     if (pet) {
       petDataForm.name.value = pet.fullName;
       pic.setAttribute("src", pet.pictureURL);
-      petDataForm.geoloc.value = `${pet.lat},${pet.lng}`;
+      petDataForm.geoloc.value = pet.loc;
+      petDataForm.description.value = pet.description;
     }
 
     //inicializa el mapa
