@@ -24,6 +24,8 @@ class HeaderComp extends HTMLElement {
 
       logOutButton.addEventListener("click", () => {
         state.logOut();
+        logInButton.textContent = "Iniciar Sesión";
+        logOutButton.style.display = "none";
         Router.go("/");
       });
     } else {
