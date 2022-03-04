@@ -14,14 +14,11 @@ class PetData extends HTMLElement {
     }
 
     const { petData } = state.getState();
-    console.log(petData, "petData antes del if");
 
     if (petData.id) {
-      console.log("entro al if");
+      await state.getPetData();
 
-      await state.getPetData(); 
-
-      const { petData } = state.getState(); 
+      const { petData } = state.getState();
 
       this.render(petData);
     } else {

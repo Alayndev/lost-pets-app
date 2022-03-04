@@ -264,6 +264,11 @@ const state = {
         body: JSON.stringify(bodyToEndpoint),
       })
     ).json();
+
+    // Reset petData
+    cs.petData = {};
+    this.setState(cs);
+
     console.log(petEdited, "res state editPet() - 229");
 
     return petEdited;
