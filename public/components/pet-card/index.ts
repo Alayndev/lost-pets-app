@@ -3,11 +3,16 @@ class CardComp extends HTMLElement {
     this.render();
   }
 
-  addListener(id) {
+  addListener(id, reportSection) {
     this.querySelector(".report").addEventListener("click", (e) => {
       e.preventDefault();
       this.dispatchEvent(new CustomEvent("report-pet", { detail: { id } }));
     });
+
+    const type = this.getAttribute("type");
+    if (!type) {
+      reportSection.style.display = "none";
+    }
   }
 
   render() {
@@ -16,6 +21,9 @@ class CardComp extends HTMLElement {
     const id = this.getAttribute("petId");
     const description = this.getAttribute("description");
     const loc = this.getAttribute("loc");
+    const type = this.getAttribute("type");
+
+    const textContent = type ? "REPORTAR INFORMACIÓN" : "";
 
     this.innerHTML = `
     <div class="card pet-card" style="width: 18rem;">
@@ -26,13 +34,15 @@ class CardComp extends HTMLElement {
         <p class="subtitle"> Descripción: ${description} </p>
         <p class="subtitle"> 📍 ${loc} </p>
 
-        <ul class="pet-card__links">
-          <a class="pet-card__link report">REPORTAR INFORMACIÓN</a>
+        <ul class="pet-card__links ul-links">
+          <a class="pet-card__link report subtitle"> ${textContent}  </a>
         </ul>
       </div>
     </div>    `;
 
-    this.addListener(id);
+    const reportSection: any = this.querySelector(".ul-links");
+
+    this.addListener(id, reportSection);
   }
 }
 
