@@ -199,7 +199,7 @@ const state = {
     return userPets;
   },
 
-  async logout() {
+  async logOut() {
     const cs = this.getState();
     cs.user = {};
     this.setState(cs);

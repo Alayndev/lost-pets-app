@@ -1,17 +1,36 @@
 import { Router } from "@vaadin/router";
+import { state } from "../../state";
 
 const footprint = require("url:../../images/footprint.png");
 
 class HeaderComp extends HTMLElement {
   connectedCallback() {
-    this.render();
+    const { user } = state.getState();
+
+    if (user) {
+      this.render(user);
+    } else {
+      this.render();
+    }
   }
 
-  addListeners() {
+  addListeners(userEmail?) {
     const logInButton = this.querySelector(".log-in");
-    logInButton.addEventListener("click", () => {
-      Router.go("/login");
-    });
+    const userState = logInButton.getAttribute("userState");
+
+    if (userState == userEmail) {
+      const logOutButton: any = this.querySelector(".log-out");
+      logOutButton.style.display = "inline";
+
+      logOutButton.addEventListener("click", () => {
+        state.logOut();
+        Router.go("/");
+      });
+    } else {
+      logInButton.addEventListener("click", () => {
+        Router.go("/login");
+      });
+    }
 
     const myDataButton = this.querySelector(".me");
     myDataButton.addEventListener("click", () => {
@@ -34,7 +53,9 @@ class HeaderComp extends HTMLElement {
     });
   }
 
-  render() {
+  render(user?) {
+    const textContent = user.email ? user.email : "Iniciar sesión";
+
     this.innerHTML = `
     <nav class="navbar navbar-expand-md navbar-light bg-light">
       <div class="container-fluid">
@@ -63,8 +84,13 @@ class HeaderComp extends HTMLElement {
           
 
             <li class="nav-item">
-              <button type="button" class="btn btn-outline-success log-in btn-header"> Iniciar sesión </button>
+              <button type="button" class="btn btn-outline-success log-in btn-header" userState=${textContent}> ${textContent} </button>
             </li>
+
+            <li class="nav-item">
+              <button type="button" class="btn btn-outline-danger log-out btn-header" userState=${textContent}> Cerrar sesión </button>
+            </li>
+
 
           
           </ul>
@@ -73,7 +99,7 @@ class HeaderComp extends HTMLElement {
     </nav>
     `;
 
-    this.addListeners();
+    this.addListeners(user.email);
   }
 }
 
