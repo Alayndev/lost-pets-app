@@ -68,6 +68,7 @@ class PetData extends HTMLElement {
               <div id="map" style="width: 335px; height: 335px"></div>
               <input type="text" name="geoloc" class="search-geoloc" required>
 
+              <span class="loader-container"> </span>
               
               <x-button class="submit" type="btn btn-outline-success buttonCentered">${type}</x-button>
               
@@ -103,6 +104,12 @@ class PetData extends HTMLElement {
       async (e) => {
         const petDataForm: any = this.querySelector(".form");
 
+        const loaderCont = this.querySelector(".loader-container");
+        loaderCont.setAttribute("style", "display: flex; margin-bottom: 40px");
+        loaderCont.innerHTML = `
+        <x-loader-comp> </x-loader-comp>
+        `;
+
         if (type == "Editar") {
           // Edita la mascota
           const res = await state.editPet({
@@ -115,10 +122,12 @@ class PetData extends HTMLElement {
           console.log(res, "res editPet() en pet-data page 96");
 
           if (res.algoliaPetUpdated.error || res.petUpdated.error) {
+            loaderCont.setAttribute("style", "display: none");
             Swal.fire({
               title: res.petUpdated.error || res.algoliaPetUpdated.error,
             });
           } else {
+            loaderCont.setAttribute("style", "display: none");
             Swal.fire({ icon: "success" });
           }
         }
@@ -134,11 +143,13 @@ class PetData extends HTMLElement {
           console.log(res, "res createPet() en pet-data page 134");
 
           if (res.petCreated === false) {
+            loaderCont.setAttribute("style", "display: none");
             Swal.fire({
               title:
                 "Este reporte ya existe. Asegúrese de completar los campos correctamente.",
             });
           } else {
+            loaderCont.setAttribute("style", "display: none");
             Swal.fire({
               icon: "success",
               title:
@@ -161,14 +172,22 @@ class PetData extends HTMLElement {
         //enviar al servidor que se encontró a la pet
         const res = await state.petFound(pet.id);
 
+        const loaderCont = this.querySelector(".loader-container");
+        loaderCont.setAttribute("style", "display: flex; margin-bottom: 40px");
+        loaderCont.innerHTML = `
+        <x-loader-comp> </x-loader-comp>
+        `;
+
         console.log(res, "res findedPet() en pet-data page 140");
 
         if (res.algoliaPetDeleted.taskID && res.petdeleted.length === 1) {
+          loaderCont.setAttribute("style", "display: none");
           Swal.fire({
             icon: "success",
             title: "Usted ha encontrado a su mascota! Felicitaciones!",
           });
         } else {
+          loaderCont.setAttribute("style", "display: none");
           Swal.fire({
             title: "Ha ocurrido un error, intente nuevamente!",
           });

@@ -46,6 +46,9 @@ class UserData extends HTMLElement {
         </div>
 
         <x-button type="btn btn-outline-primary"> Guardar </x-button>
+
+        <span class="loader-container"> </span>
+
       </form>
     `;
 
@@ -61,22 +64,28 @@ class UserData extends HTMLElement {
         const value = Object.fromEntries(data.entries());
         console.log(value, "value a ver");
 
+        const loaderCont = this.querySelector(".loader-container");
+        loaderCont.setAttribute("style", "display: flex");
+        loaderCont.innerHTML = `
+        <x-loader-comp> </x-loader-comp>
+        `;
+        
         const password = loginForm.password.value;
         const repeatedPassword = loginForm.repeatedPassword.value;
-
+        
         if (password === repeatedPassword) {
-          const res = await state.updateUser(value); 
+          const res = await state.updateUser(value);
           console.log(res, "json");
-
+          
           if (!res.error) {
+            loaderCont.setAttribute("style", "display: none");
             Swal.fire({
               icon: "success",
             });
           }
         } else {
-          Swal.fire(
-            "Verificar que las contraseñas ingresadas coincidan."
-          );
+          loaderCont.setAttribute("style", "display: none");
+          Swal.fire("Verificar que las contraseñas ingresadas coincidan.");
         }
       });
     } else {
@@ -87,6 +96,12 @@ class UserData extends HTMLElement {
         const password = loginForm.password.value;
         const repeatedPassword = loginForm.repeatedPassword.value;
 
+        const loaderCont = this.querySelector(".loader-container");
+        loaderCont.setAttribute("style", "display: flex");
+        loaderCont.innerHTML = `
+        <x-loader-comp> </x-loader-comp>
+        `;
+        
         if (password === repeatedPassword) {
           try {
             const res = await state.createOrFindUser({
@@ -94,27 +109,28 @@ class UserData extends HTMLElement {
               email,
               password,
             });
-
+            
             console.log(res, "res createOrFindUser() en user-data.ts - 92");
-
+            
             if (res === true) {
+              loaderCont.setAttribute("style", "display: none");
               Swal.fire({
                 icon: "success",
                 title: "Bienvenidx!",
               });
             } else {
+              loaderCont.setAttribute("style", "display: none");
               Swal.fire({
                 title:
-                  "Ha ocurrido un error al crear su usuario. Por favor intente nuevamente completando todos los campos.",
+                "Ha ocurrido un error al crear su usuario. Por favor intente nuevamente completando todos los campos.",
               });
             }
           } catch (err) {
             console.error(err);
           }
         } else {
-          Swal.fire(
-            "Verificar que las contraseñas ingresadas coincidan."
-          );
+          loaderCont.setAttribute("style", "display: none");
+          Swal.fire("Verificar que las contraseñas ingresadas coincidan.");
         }
       });
     }

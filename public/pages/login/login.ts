@@ -1,6 +1,7 @@
 import { Router } from "@vaadin/router";
 import { state } from "../../state";
 import Swal from "sweetalert2";
+import { debuglog } from "util";
 
 class Login extends HTMLElement {
   connectedCallback() {
@@ -19,6 +20,9 @@ class Login extends HTMLElement {
         <input type="email" name="email" required >
         </label>
         <x-button type="btn btn-outline-primary"> Siguiente </x-button>
+        
+        <span class="loader-container">  </span>
+
       </form>
     </div>
     `;
@@ -29,6 +33,12 @@ class Login extends HTMLElement {
       .addEventListener("buttonClicked", async (e) => {
         const email = form.email.value;
         const { exist } = await state.checkMail(email);
+
+        const loaderCont = this.querySelector(".loader-container");
+        loaderCont.setAttribute("style", "display: flex");
+        loaderCont.innerHTML = `
+          <x-loader-comp> </x-loader-comp>
+        `;
 
         try {
           if (exist.exist == true) {
@@ -47,6 +57,12 @@ class Login extends HTMLElement {
       e.preventDefault();
       const email = form.email.value;
       const { exist } = await state.checkMail(email);
+
+      const loaderCont = this.querySelector(".loader-container");
+      loaderCont.setAttribute("style", "display: flex");
+      loaderCont.innerHTML = `
+        <x-loader-comp> </x-loader-comp>
+      `;
 
       try {
         if (exist.exist == true) {
@@ -75,6 +91,10 @@ class Login extends HTMLElement {
         <input type="password" name="password" required>
         </label>
         <x-button type="btn btn-outline-primary"> Ingresar </x-button>
+
+        <span class="loader-container">  </span>
+
+
       </form>
     </div>
 
@@ -87,10 +107,17 @@ class Login extends HTMLElement {
         e.preventDefault();
         const userData = { email, password: form.password.value };
 
+        const loaderCont = this.querySelector(".loader-container");
+        loaderCont.setAttribute("style", "display: flex");
+        loaderCont.innerHTML = `
+        <x-loader-comp> </x-loader-comp>
+        `;
+        
         const res = await state.createOrFindUser(userData);
         console.log("res en login", res);
-
+        
         if (res === false) {
+          loaderCont.setAttribute("style", "display: none");
           Swal.fire({
             text: `La contraseña ingresada NO es correcta.`,
           });
@@ -106,6 +133,12 @@ class Login extends HTMLElement {
     form.addEventListener("submit", async (e: any) => {
       e.preventDefault();
       const userData = { email, password: form.password.value };
+
+      const loaderCont = this.querySelector(".loader-container");
+      loaderCont.setAttribute("style", "display: flex");
+      loaderCont.innerHTML = `
+        <x-loader-comp> </x-loader-comp>
+      `;
 
       const res = await state.createOrFindUser(userData);
       console.log("res en login submit", res);

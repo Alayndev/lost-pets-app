@@ -11,6 +11,12 @@ class HomePage extends HTMLElement {
   addListenerGeoloc() {
     const cs = state.getState();
     this.querySelector("x-button").addEventListener("buttonClicked", (e) => {
+      const loaderCont = this.querySelector(".loader-container");
+      loaderCont.setAttribute("style", "display: initial");
+      loaderCont.innerHTML = `
+        <x-loader-comp> </x-loader-comp>
+      `;
+
       navigator.geolocation.getCurrentPosition(async (geo) => {
         const { latitude, longitude } = geo.coords;
         cs._geoloc = { lat: latitude, lng: longitude };
@@ -73,6 +79,9 @@ class HomePage extends HTMLElement {
         <textarea class="report-pet__input textarea" name="report" required></textarea>
       </label>
       <x-button type="btn btn-outline-success">Enviar reporte</x-button>
+
+      <span class="loader-container"></span>
+
     </form>
     `;
     div.className = "report-this-pet";
@@ -89,6 +98,11 @@ class HomePage extends HTMLElement {
     form
       .querySelector("x-button")
       .addEventListener("buttonClicked", async (e: any) => {
+        const loaderCont = this.querySelector(".loader-container");
+        loaderCont.setAttribute("style", "display: initial");
+        loaderCont.innerHTML = `
+          <x-loader-comp> </x-loader-comp>
+        `;
 
         const report = {
           petId: pet.id,
@@ -99,7 +113,8 @@ class HomePage extends HTMLElement {
         };
 
         try {
-          const reportSent = await state.sendReport(report); // ACA - Hecho
+          const reportSent = await state.sendReport(report);
+
           console.log(reportSent);
 
           if (reportSent.error) {
@@ -123,13 +138,14 @@ class HomePage extends HTMLElement {
     if (!pets) {
       this.innerHTML = `
     <x-header-comp> </x-header-comp>
-
     <div class="main-container">
       <div class="main-container">
         <h1 class="title"> Mascotas perdidas cerca tuyo </h1>
         <p class="text"> Para ver las mascotas reportadas cerca tuyo necesitamos permiso para conocer tu ubicación. </p>
         
         <x-button type="btn btn-outline-primary" >Dar mi ubicación</x-button>
+
+        <span class="loader-container"></span>
       </div>
      </div>
     `;

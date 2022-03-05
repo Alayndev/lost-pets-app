@@ -2,6 +2,7 @@
 import "./components/header";
 import "./components/pet-card";
 import "./components/button";
+import "./components/loader";
 
 // Pages
 import "./pages/home/home";
