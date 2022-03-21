@@ -56,8 +56,18 @@ import { sendEmail } from "./lib/sendgrid";
 // EXPRESS CONFIG
 const app = express();
 app.use(express.json());
-app.use(cors());
 const port = process.env.PORT || 3000;
+
+const allowedHosts = [
+  "https://lost-pet-finder-app-2.web.app",
+  "https://lost-pet-finder-app-2.firebaseapp.com",
+];
+
+app.use(
+  cors({
+    origin: allowedHosts,
+  })
+);
 
 // TESTING CONNECTION - DB POSTGRES HEROKU:
 test();
