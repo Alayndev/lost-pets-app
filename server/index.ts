@@ -61,6 +61,7 @@ const port = process.env.PORT || 3000;
 const allowedHosts = [
   "https://lost-pet-finder-app-2.web.app",
   "https://lost-pet-finder-app-2.firebaseapp.com",
+  "http://localhost:8080/",
 ];
 
 app.use(
