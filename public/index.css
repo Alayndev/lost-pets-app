@@ -127,3 +127,11 @@ body {
   display: none;
   justify-content: center;
 }
+
+.login-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}

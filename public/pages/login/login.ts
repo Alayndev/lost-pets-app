@@ -13,10 +13,10 @@ class Login extends HTMLElement {
     <x-header-comp> </x-header-comp>
 
     <div class="main-container">
-      <form class="login">
+      <form class="login-page">
         <h1>Ingresar</h1>
         <label>
-        <span>EMAIL</span>
+        <div>EMAIL</div>
         <input type="email" name="email" required >
         </label>
         <x-button type="btn btn-outline-primary"> Siguiente </x-button>
@@ -27,7 +27,7 @@ class Login extends HTMLElement {
     </div>
     `;
 
-    const form: any = this.querySelector(".login");
+    const form: any = this.querySelector(".login-page");
     form
       .querySelector("x-button")
       .addEventListener("buttonClicked", async (e) => {
@@ -84,10 +84,10 @@ class Login extends HTMLElement {
     <x-header-comp> </x-header-comp>
 
     <div class="main-container">  
-      <form class="login">
+      <form class="login-page">
         <h1>Ingresar</h1>
         <label>
-        <span>CONTRASEÑA</span>
+        <div>CONTRASEÑA</div>
         <input type="password" name="password" required>
         </label>
         <x-button type="btn btn-outline-primary"> Ingresar </x-button>
@@ -100,7 +100,7 @@ class Login extends HTMLElement {
 
     `;
 
-    const form: any = this.querySelector(".login");
+    const form: any = this.querySelector(".login-page");
     form
       .querySelector("x-button")
       .addEventListener("buttonClicked", async (e: any) => {

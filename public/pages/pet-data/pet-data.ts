@@ -42,12 +42,12 @@ class PetData extends HTMLElement {
         <div class="sub-container">
         
                 <label class="label">
-                <span>NOMBRE</span>
+                <div>NOMBRE: </div>
                 <input type="text" name="name" class="is-success" required />
                 </label>
 
                 <label class="label">
-                <span> DESCRIPCIÓN: </span>
+                <div> DESCRIPCIÓN: </div>
                 <input type="text" name="description" class="is-success" />
                 </label>
 
